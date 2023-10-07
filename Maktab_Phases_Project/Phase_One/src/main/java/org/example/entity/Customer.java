@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 
 @Entity
 @Setter
@@ -28,4 +30,10 @@ public class Customer {
 
     @Column(name= "password", nullable = false)
     private String password;
+
+    @OneToOne
+    private Customer customer;
+
+    @OneToMany
+    private Set<Order> orders;
 }
