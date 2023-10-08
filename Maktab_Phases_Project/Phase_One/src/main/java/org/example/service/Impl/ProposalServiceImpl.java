@@ -1,55 +1,41 @@
 package org.example.service.Impl;
 
-import org.example.base.BaseRepository;
 import org.example.entity.Proposal;
 import org.example.repository.ProposalRepository;
+import org.example.service.ProposalService;
 
 import java.util.List;
 
-public class ProposalServiceImpl extends BaseRepository implements ProposalRepository {
+public class ProposalServiceImpl implements ProposalService {
+
+    private final ProposalRepository proposalRepository;
+
+    public ProposalServiceImpl(ProposalRepository proposalRepository) {
+        this.proposalRepository = proposalRepository;
+    }
+
     @Override
     public void saveProposal(Proposal proposal) {
-        try {
-            em.getTransaction().begin();
-            em.persist(proposal);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        proposalRepository.saveProposal(proposal);
     }
 
     @Override
     public Proposal getProposalById(Long id) {
-        return em.find(Proposal.class, id);
+        return proposalRepository.getProposalById(id);
     }
 
     @Override
     public List<Proposal> getAllProposals() {
-        return em.createQuery("SELECT p FROM Proposal  p", Proposal.class).getResultList();
+        return proposalRepository.getAllProposals();
     }
 
     @Override
     public void updateProposal(Proposal proposal) {
-        try {
-            em.getTransaction().begin();
-            em.merge(proposal);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        proposalRepository.updateProposal(proposal);
     }
 
     @Override
     public void deleteProposal(Proposal proposal) {
-        try {
-            em.getTransaction().begin();
-            em.remove(em.contains(proposal) ? proposal : em.merge(proposal));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        proposalRepository.deleteProposal(proposal);
     }
 }
