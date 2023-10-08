@@ -31,9 +31,13 @@ public class Customer {
     @Column(name= "password", nullable = false)
     private String password;
 
-    @OneToOne
-    private Customer customer;
+    @OneToOne(mappedBy = "customer")
+    private Credit credit;
 
-    @OneToMany
+    @OneToMany(mappedBy = "customer")
     private Set<Order> orders;
+
+    @OneToMany(mappedBy = "customer")
+    private Set<Review> reviews;
+
 }

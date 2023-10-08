@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Entity
 @Setter
@@ -29,4 +31,16 @@ public class Specialist {
 
     @Column(name= "password", nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "specialist")
+    private Credit credit;
+
+    @OneToMany(mappedBy = "specialist")
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "specialist")
+    private List<Proposal> proposals;
+
+    @Enumerated(EnumType.STRING)
+    private SpecialistStatus specialistStatus;
 }

@@ -17,9 +17,16 @@ public class Credit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    private Customer customer;
-
     @Column(name = "balance", nullable = false)
     private double balance;
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @OneToOne
+    @JoinColumn(name = "specialist_id")
+    private Specialist specialist;
+
+
 }
