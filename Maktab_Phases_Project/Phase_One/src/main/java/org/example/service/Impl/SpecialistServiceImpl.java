@@ -3,53 +3,40 @@ package org.example.service.Impl;
 import org.example.base.BaseRepository;
 import org.example.entity.Specialist;
 import org.example.repository.SpecialistRepository;
+import org.example.service.SpecialistService;
 
 import java.util.List;
 
-public class SpecialistServiceImpl extends BaseRepository implements SpecialistRepository {
+public class SpecialistServiceImpl implements SpecialistService {
+
+    private final SpecialistRepository specialistRepository;
+
+    public SpecialistServiceImpl(SpecialistRepository specialistRepository) {
+        this.specialistRepository = specialistRepository;
+    }
+
     @Override
     public void saveSpecialist(Specialist specialist) {
-        try {
-            em.getTransaction().begin();
-            em.persist(specialist);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        specialistRepository.saveSpecialist(specialist);
     }
 
     @Override
     public Specialist getSpecialistById(Long id) {
-        return em.find(Specialist.class, id);
+        return specialistRepository.getSpecialistById(id);
     }
 
     @Override
     public List<Specialist> getAllSpecialists() {
-        return em.createQuery("SELECT s FROM Specialist s", Specialist.class).getResultList();
+        return specialistRepository.getAllSpecialists();
     }
 
     @Override
     public void updateSpecialist(Specialist specialist) {
-        try {
-            em.getTransaction().begin();
-            em.merge(specialist);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        specialistRepository.updateSpecialist(specialist);
     }
 
     @Override
     public void deleteSpecialist(Specialist specialist) {
-        try {
-            em.getTransaction().begin();
-            em.remove(em.contains(specialist) ? specialist : em.merge(specialist));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        specialistRepository.deleteSpecialist(specialist);
     }
 }
