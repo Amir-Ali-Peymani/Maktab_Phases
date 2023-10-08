@@ -32,6 +32,9 @@ public class Specialist {
     @Column(name= "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private SpecialistStatus specialistStatus;
+
     @OneToOne(mappedBy = "specialist")
     private Credit credit;
 
@@ -41,6 +44,6 @@ public class Specialist {
     @OneToMany(mappedBy = "specialist")
     private List<Proposal> proposals;
 
-    @Enumerated(EnumType.STRING)
-    private SpecialistStatus specialistStatus;
+    @OneToMany(mappedBy = "specialist")
+    private List<Order> orders;
 }
