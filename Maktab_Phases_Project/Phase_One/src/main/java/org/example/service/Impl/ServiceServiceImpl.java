@@ -3,53 +3,41 @@ package org.example.service.Impl;
 import org.example.base.BaseRepository;
 import org.example.entity.Service;
 import org.example.repository.ServiceRepository;
+import org.example.service.ServiceService;
 
 import java.util.List;
 
-public class ServiceServiceImpl extends BaseRepository implements ServiceRepository {
+public class ServiceServiceImpl implements ServiceService {
+
+    private final ServiceRepository serviceRepository;
+
+    public ServiceServiceImpl(ServiceRepository serviceRepository) {
+        this.serviceRepository = serviceRepository;
+    }
+
+
     @Override
     public void saveService(Service service) {
-        try {
-            em.getTransaction().begin();
-            em.persist(service);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        serviceRepository.saveService(service);
     }
 
     @Override
     public Service getServiceById(Long id) {
-        return em.find(Service.class, id);
+        return serviceRepository.getServiceById(id);
     }
 
     @Override
     public List<Service> getAllServices() {
-        return em.createQuery("SELECT s FROM Service  s", Service.class).getResultList();
+        return serviceRepository.getAllServices();
     }
 
     @Override
     public void updateService(Service service) {
-        try {
-            em.getTransaction().begin();
-            em.merge(service);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        serviceRepository.updateService(service);
     }
 
     @Override
     public void deleteService(Service service) {
-        try {
-            em.getTransaction().begin();
-            em.remove(em.contains(service) ? service : em.merge(service));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        serviceRepository.deleteService(service);
     }
 }
