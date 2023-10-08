@@ -3,53 +3,40 @@ package org.example.service.Impl;
 import org.example.base.BaseRepository;
 import org.example.entity.Review;
 import org.example.repository.ReviewRepository;
+import org.example.service.ReviewService;
 
 import java.util.List;
 
-public class ReviewServiceImpl extends BaseRepository implements ReviewRepository {
+public class ReviewServiceImpl implements ReviewService {
+
+    private final ReviewRepository reviewRepository;
+
+    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+        this.reviewRepository = reviewRepository;
+    }
+
     @Override
     public void saveReview(Review review) {
-        try {
-            em.getTransaction().begin();
-            em.persist(review);
-            em.getTransaction().commit();
-        }catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        reviewRepository.saveReview(review);
     }
 
     @Override
     public Review getReview(Long id) {
-        return em.find(Review.class, id);
+        return reviewRepository.getReview(id);
     }
 
     @Override
     public List<Review> getAllReviews() {
-        return em.createQuery("SELECT r FROM Review  r", Review.class).getResultList();
+        return reviewRepository.getAllReviews();
     }
 
     @Override
     public void updateReview(Review review) {
-        try {
-            em.getTransaction().begin();
-            em.merge(review);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        reviewRepository.updateReview(review);
     }
 
     @Override
     public void deleteReview(Review review) {
-        try {
-            em.getTransaction().begin();
-            em.remove(em.contains(review) ? review : em.merge(review));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        reviewRepository.deleteReview(review);
     }
 }
