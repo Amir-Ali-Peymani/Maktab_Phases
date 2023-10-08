@@ -3,53 +3,41 @@ package org.example.service.Impl;
 import org.example.base.BaseRepository;
 import org.example.entity.Credit;
 import org.example.repository.CreditRepository;
+import org.example.service.CreditService;
 
 import java.util.List;
 
-public class CreditServiceImpl extends BaseRepository implements CreditRepository {
+public class CreditServiceImpl implements CreditService {
+
+    private final CreditRepository creditRepository;
+
+    public CreditServiceImpl(CreditRepository creditRepository) {
+        this.creditRepository = creditRepository;
+    }
+
+
     @Override
     public void saveCredit(Credit credit) {
-        try {
-            em.getTransaction().begin();
-            em.persist(credit);
-            em.getTransaction().commit();
-        }catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        creditRepository.saveCredit(credit);
     }
 
     @Override
     public Credit getCreditById(Long id) {
-        return em.find(Credit.class, id);
+        return creditRepository.getCreditById(id);
     }
 
     @Override
     public List<Credit> getAllCredit() {
-        return em.createQuery("SELECT c FROM Credit c", Credit.class).getResultList();
+        return creditRepository.getAllCredit();
     }
 
     @Override
     public void updateCredit(Credit credit) {
-        try {
-            em.getTransaction().begin();
-            em.merge(credit);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        creditRepository.updateCredit(credit);
     }
 
     @Override
     public void deleteCredit(Credit credit) {
-        try {
-            em.getTransaction().begin();
-            em.remove(em.contains(credit) ? credit : em.merge(credit));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
+        creditRepository.deleteCredit(credit);
     }
 }
