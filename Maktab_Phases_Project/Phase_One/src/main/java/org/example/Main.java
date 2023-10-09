@@ -1,38 +1,30 @@
 package org.example;
 
-import org.example.base.BaseRepository;
-import org.example.entity.Customer;
-import org.example.entity.Order;
-import org.example.service.Impl.CustomerServiceImpl;
-import org.example.service.OrderService;
+import org.example.entity.Admin;
+import org.example.repository.AdminRepository;
+import org.example.repository.Impl.AdminRepositoryImpl;
+import org.example.service.AdminService;
+import org.example.service.Impl.AdminServiceImpl;
+import org.example.util.ServiceLocator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class Main extends BaseRepository {
+public class Main {
     public static void main(String[] args) {
-        // Create a Customer instance
-        Customer customer = new Customer();
-        customer.setFirstName("John");
-        customer.setLastName("Doe");
-        customer.setEmail("john.doe@example.com");
-        customer.setPassword("password123");
 
-        // Create an Order instance
-        Order order = new Order();
-        order.setProposedPrice(100.0); // Set other order properties as needed
-        order.setCustomer(customer); // Set the customer for this order
 
-        // Now, add the order to the customer's set of orders
-        Set<Order> orders = new HashSet<>();
-        orders.add(order);
-        customer.setOrders(orders);
+        signInAdmin("john.doe@example.com", "password123");
+    }
 
-        // Save the customer and order to the database using your service
-        // OrderService orderService = new OrderService();
-        // orderService.saveCustomer(customer);
-        // orderService.saveOrder(order);
+
+    private static void signInAdmin(String userName, String password){
+        List<Admin> admins = ServiceLocator.getAdminService().getAllAdmin();
+        for (Admin admin : admins){
+            if (admin.getEmail().equals(userName) && admin.getPassword().equals(password)){
+                System.out.println("you have log in successfully");
+            } else {
+                System.out.println(" you have failed to signIn");
+            }
+        }
     }
 }
