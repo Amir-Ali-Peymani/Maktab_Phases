@@ -28,11 +28,17 @@ public class Order {
 
     private Date date;
 
+    @Column(nullable = true)
+    private double finalPrice;
+
+    @Column(nullable = true)
+    private Date compeletionDate;
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
 
