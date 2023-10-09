@@ -6,6 +6,8 @@ import org.example.repository.AdminRepository;
 import org.example.repository.Impl.AdminRepositoryImpl;
 import org.example.service.AdminService;
 
+import java.util.List;
+
 public class AdminServiceImpl  implements AdminService {
 
     private final AdminRepository adminRepository;
@@ -16,6 +18,11 @@ public class AdminServiceImpl  implements AdminService {
     @Override
     public Admin getAdminById(long id) {
         return adminRepository.getAdminById(id);
+    }
+
+    @Override
+    public List<Admin> getAllAdmin() {
+        return adminRepository.getAllAdmin();
     }
 
     @Override
