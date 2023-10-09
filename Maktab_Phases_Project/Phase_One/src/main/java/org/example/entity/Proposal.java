@@ -25,7 +25,7 @@ public class Proposal {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "specialist_id")
+    @JoinColumn(name = "specialist_id", nullable = false)
     private Specialist specialist;
 
     private double proposedPrice;

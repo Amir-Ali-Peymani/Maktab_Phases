@@ -46,4 +46,8 @@ public class Specialist {
 
     @OneToMany(mappedBy = "specialist")
     private List<Order> orders;
+
+    @ManyToOne
+    @JoinColumn(name = "subService_id")
+    private SubService subService;
 }

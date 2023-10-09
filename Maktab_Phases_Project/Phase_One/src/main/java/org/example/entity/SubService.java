@@ -30,6 +30,9 @@ public class SubService {
     private Service service;
 
     @OneToMany(mappedBy = "subService")
+    private List<Specialist> specialist;
+
+    @OneToMany(mappedBy = "subService")
     private List<Order> orderList;
 
 }
