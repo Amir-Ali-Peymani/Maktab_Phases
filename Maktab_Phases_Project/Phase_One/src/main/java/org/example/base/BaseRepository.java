@@ -15,8 +15,5 @@ public class BaseRepository {
 
     protected static EntityManager em = emf.createEntityManager();
 
-    protected static final AdminRepository adminRepository = new AdminRepositoryImpl();
-
-    protected static final AdminService adminService = new AdminServiceImpl(adminRepository);
 
 }
