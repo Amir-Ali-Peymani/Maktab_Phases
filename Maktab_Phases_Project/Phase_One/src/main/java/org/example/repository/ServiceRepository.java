@@ -10,6 +10,8 @@ public interface ServiceRepository {
 
     Service getServiceById(Long id);
 
+    Service getServiceByName(String name);
+
     List<Service> getAllServices();
 
     void updateService(Service service);

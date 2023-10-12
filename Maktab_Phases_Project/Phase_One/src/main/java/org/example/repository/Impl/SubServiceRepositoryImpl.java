@@ -1,6 +1,8 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.NoResultException;
 import org.example.base.BaseRepository;
+import org.example.entity.Service;
 import org.example.entity.SubService;
 import org.example.repository.SubServiceRepository;
 
@@ -22,6 +24,17 @@ public class SubServiceRepositoryImpl extends BaseRepository implements SubServi
     @Override
     public SubService getSubServiceById(Long id) {
         return em.find(SubService.class, id);
+    }
+
+    @Override
+    public SubService getSubServiceByName(String name) {
+        try {
+            return em.createQuery("SELECT s FROM SubService s WHERE s.name = :name", SubService.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override

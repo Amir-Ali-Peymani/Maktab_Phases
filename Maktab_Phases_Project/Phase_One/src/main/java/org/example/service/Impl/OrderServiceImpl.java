@@ -1,6 +1,8 @@
 package org.example.service.Impl;
 
+import org.example.entity.Customer;
 import org.example.entity.Order;
+import org.example.entity.SubService;
 import org.example.repository.OrderRepository;
 import org.example.service.OrderService;
 
@@ -27,6 +29,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAllOrder() {
         return orderRepository.getAllOrder();
+    }
+
+    @Override
+    public List<Order> getOrdersByCustomerAndSubService(Customer customer, SubService subService) {
+        return orderRepository.getOrdersByCustomerAndSubService(customer, subService);
     }
 
     @Override

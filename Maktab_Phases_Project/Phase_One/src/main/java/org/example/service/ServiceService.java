@@ -8,7 +8,9 @@ public interface ServiceService {
 
     void saveService(Service service);
 
-    Service getServiceById(Long id);
+    Service getServiceById(long id);
+
+    Service getServiceByName(String name);
 
     List<Service> getAllServices();
 

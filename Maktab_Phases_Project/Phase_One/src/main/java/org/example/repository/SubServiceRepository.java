@@ -10,6 +10,8 @@ public interface SubServiceRepository {
 
     SubService getSubServiceById(Long id);
 
+    SubService getSubServiceByName(String name);
+
     List<SubService> getAllSubServices();
 
     void updateSubService(SubService subService);

@@ -34,7 +34,7 @@ public class Order {
     @Column(nullable = true)
     private Date compeletionDate;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 

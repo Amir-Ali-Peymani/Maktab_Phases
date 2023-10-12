@@ -1,6 +1,5 @@
 package org.example.service.Impl;
 
-import org.example.base.BaseRepository;
 import org.example.entity.SubService;
 import org.example.repository.SubServiceRepository;
 import org.example.service.SubServiceService;
@@ -24,6 +23,11 @@ public class SubServiceServiceImpl implements SubServiceService {
     @Override
     public SubService getSubServiceById(Long id) {
         return subServiceRepository.getSubServiceById(id);
+    }
+
+    @Override
+    public SubService getSubServiceByName(String name) {
+        return subServiceRepository.getSubServiceByName(name);
     }
 
     @Override

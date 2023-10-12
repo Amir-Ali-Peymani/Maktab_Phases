@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.NoResultException;
 import org.example.base.BaseRepository;
 import org.example.entity.Service;
 import org.example.repository.ServiceRepository;
@@ -23,6 +24,18 @@ public class ServiceRepositoryImpl extends BaseRepository implements ServiceRepo
     public Service getServiceById(Long id) {
         return em.find(Service.class, id);
     }
+
+    @Override
+    public Service getServiceByName(String name) {
+        try {
+            return em.createQuery("SELECT s FROM Service s WHERE s.name = :name", Service.class)
+                    .setParameter("name", name)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 
     @Override
     public List<Service> getAllServices() {

@@ -19,7 +19,12 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+
+    private int rating;
+
+    private String comment;
+
+    @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -28,9 +33,5 @@ public class Review {
     private Specialist specialist;
 
 
-
-    private int rating;
-
-    private String comment;
 
 }

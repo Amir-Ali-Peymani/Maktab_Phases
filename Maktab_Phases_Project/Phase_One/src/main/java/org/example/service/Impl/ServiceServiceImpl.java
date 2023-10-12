@@ -22,8 +22,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service getServiceById(Long id) {
+    public Service getServiceById(long id) {
         return serviceRepository.getServiceById(id);
+    }
+
+    @Override
+    public Service getServiceByName(String name) {
+        return serviceRepository.getServiceByName(name);
     }
 
     @Override
