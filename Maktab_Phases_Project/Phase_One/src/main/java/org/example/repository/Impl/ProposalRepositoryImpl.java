@@ -1,7 +1,10 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.TypedQuery;
 import org.example.base.BaseRepository;
+import org.example.entity.Order;
 import org.example.entity.Proposal;
+import org.example.entity.Specialist;
 import org.example.repository.ProposalRepository;
 
 import java.util.List;
@@ -22,6 +25,19 @@ public class ProposalRepositoryImpl extends BaseRepository implements ProposalRe
     @Override
     public Proposal getProposalById(Long id) {
         return em.find(Proposal.class, id);
+    }
+
+    @Override
+    public Proposal getProposalByOrderAndSpecialist(Order order, Specialist specialist) {
+        String jpql = "SELECT p FROM Proposal p WHERE p.order = :order AND p.specialist = :specialist";
+        TypedQuery<Proposal> query = em.createQuery(jpql, Proposal.class);
+        query.setParameter("order", order);
+        query.setParameter("specialist", specialist);
+        try {
+            return query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

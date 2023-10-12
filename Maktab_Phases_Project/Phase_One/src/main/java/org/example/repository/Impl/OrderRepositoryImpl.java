@@ -42,6 +42,14 @@ public class OrderRepositoryImpl extends BaseRepository implements OrderReposito
     }
 
     @Override
+    public List<Order> getOrderBySubService(SubService subService) {
+        String jpql = "SELECT o FROM Order o WHERE o.subService = :subService";
+        TypedQuery<Order> query = em.createQuery(jpql, Order.class);
+        query.setParameter("subService", subService);
+        return query.getResultList();
+    }
+
+    @Override
     public void updateOrder(Order order) {
         try {
             em.getTransaction().begin();

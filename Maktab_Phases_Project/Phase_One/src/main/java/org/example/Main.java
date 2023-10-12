@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-
+        specialistSignIn();
     }
 
     private static void addingServices() {
@@ -53,10 +53,10 @@ public class Main {
         }
     }
 
-    private static void signInAdmin(){
+    private static void signInAdmin() {
         List<Admin> admins = ServiceLocator.getAdminService().getAllAdmin();
-        for (Admin admin : admins){
-            if (admin.getEmail().equals("john.doe@example.com") && admin.getPassword().equals("password123")){
+        for (Admin admin : admins) {
+            if (admin.getEmail().equals("john.doe@example.com") && admin.getPassword().equals("password123")) {
                 System.out.println("you have log in successfully");
             } else {
                 System.out.println(" you have failed to signIn");
@@ -64,18 +64,45 @@ public class Main {
         }
     }
 
-    private static void customerSignIn(){
-       List<Customer> customers = ServiceLocator.getCustomerService().getAllCustomer();
-       for (Customer customer : customers){
-           if (customer.getEmail().equals("amirali@gmail.com") && customer.getPassword().equals("1234")){
-               System.out.println("you have log in successfully");
-//               makeOrder(customer);
-//               fullFillCredit(customer);
+    private static void customerSignIn() {
+        List<Customer> customers = ServiceLocator.getCustomerService().getAllCustomer();
+        boolean loginSuccessful = false;
+        Customer loggedInCustomer = null;
+        for (Customer customer : customers) {
+            if (customer.getEmail().equals("amirali@gmail.com") && customer.getPassword().equals("1234")) {
+                System.out.println("You have logged in successfully");
+                loginSuccessful = true;
+                loggedInCustomer = customer;
+                break;
+            }
+        }
 
-           } else {
-               System.out.println("you have failed to log in");
-           }
-       }
+        if (!loginSuccessful) {
+            System.out.println("Login failed. Please check your email and password.");
+        } else {
+            makeOrder(loggedInCustomer);
+            // fullFillCredit(loggedInCustomer);
+        }
+    }
+
+    private static void specialistSignIn() {
+        List<Specialist> specialists = ServiceLocator.getSpecialtyService().getAllSpecialists();
+        Specialist loggedInSpecialist = null;
+
+        for (Specialist specialist : specialists) {
+            if (specialist.getEmail().equals("mamad@gmail.com") && specialist.getPassword().equals("234223424")) {
+                System.out.println("You have logged in successfully");
+                loggedInSpecialist = specialist;
+                break;
+            }
+        }
+
+        if (loggedInSpecialist != null && loggedInSpecialist.getSpecialistStatus() == SpecialistStatus.CONFIRM ) {
+//            specialistSubServiceChoose(loggedInSpecialist);
+            specialistProposal(loggedInSpecialist);
+        } else {
+            System.out.println("Invalid login.");
+        }
     }
 
     private static void customerSignUp() {
@@ -121,7 +148,6 @@ public class Main {
         }
     }
 
-
     private static void fullFillCredit(Customer customer) {
         List<Credit> credits = ServiceLocator.getCreditService().getAllCredit();
         boolean customerHasCredit = false;
@@ -143,8 +169,7 @@ public class Main {
         }
     }
 
-
-    private static void writeReview(Customer customer){
+    private static void writeReview(Customer customer) {
         Review review = new Review();
         review.setComment("it was very good the price was adequate");
         review.setRating(10);
@@ -152,7 +177,7 @@ public class Main {
 
     }
 
-    private static void enrollSpecialist(){
+    private static void enrollSpecialist() {
         Specialist specialist = new Specialist();
         specialist.setFirstName("mamad");
         specialist.setLastName("hoseiny");
@@ -174,12 +199,12 @@ public class Main {
         }
     }
 
-    private static void specialistStatus(){
+    private static void specialistStatus() {
         List<Specialist> listSpecialist = ServiceLocator.getSpecialtyService().getAllSpecialists();
         for (Specialist specialist : listSpecialist) {
-            System.out.println("Id = "+specialist.getId() + "|" +
-                    "email = "+specialist.getEmail() + "|" + "name = "+specialist.getFirstName()
-                    +"|"+"last name = "+specialist.getLastName());
+            System.out.println("Id = " + specialist.getId() + "|" +
+                    "email = " + specialist.getEmail() + "|" + "name = " + specialist.getFirstName()
+                    + "|" + "last name = " + specialist.getLastName());
         }
         Specialist specialist = ServiceLocator.getSpecialtyService().getSpecialistById(1L);
         specialist.setSpecialistStatus(SpecialistStatus.CONFIRM);
@@ -187,9 +212,70 @@ public class Main {
         System.out.println("the specialist status changed to the " + specialist.getSpecialistStatus());
     }
 
+    private static void specialistSubServiceChoose(Specialist specialist) {
+        if (specialist.getSubService() != null) {
+            System.out.println("you have already chosen the sub-service which is: "
+                    + specialist.getSubService().getName());
+            return;
+        }
+        List<SubService> availableSubServices = ServiceLocator.getSubServiceService().getAllSubServices();
+        System.out.println("available sub-services: ");
+        for (SubService subServiceLoop : availableSubServices) {
+            System.out.println(subServiceLoop.getId() + ":" + subServiceLoop.getName());
+        }
+        long chosenSubService = 1L;
+        SubService selectedSubService = ServiceLocator.getSubServiceService().getSubServiceById(chosenSubService);
+        if (selectedSubService != null) {
+            specialist.setSubService(selectedSubService);
+            ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
+            System.out.println("Specialist " + specialist.getId() + " has chosen the sub-service: " +
+                    selectedSubService.getName());
+        } else {
+            System.out.println("Invalid sub-service choice. Please choose from the available sub-services.");
+        }
+    }
 
+    private static void specialistProposal(Specialist specialist) {
+        SubService specialistSubService = specialist.getSubService();
+        List<Order> ordersForSpecialistSubService = ServiceLocator.getOrderService().getOrderBySubService(specialistSubService);
 
+        if (ordersForSpecialistSubService.isEmpty()) {
+            System.out.println("No orders available for the specialist's sub-service.");
+        } else {
+            System.out.println("Available Orders for Specialist's Sub-Service:");
+            for (Order order : ordersForSpecialistSubService) {
+                System.out.println("ID of order: " + order.getId() +"||"
+                 + "Customer Name: " + order.getCustomer().getFirstName()+"||"
+                 + "Proposed Price: " + order.getProposedPrice()+"||"
+                 + "Job description: " + order.getJobDescription()+"||"
+                 + "Date: " + order.getDate());
+            }
+        }
 
+        Order selectedOrder = ServiceLocator.getOrderService().getOrderById(3L);
+        Proposal existingProposal = ServiceLocator.getProposalService().getProposalByOrderAndSpecialist(selectedOrder, specialist);
+
+        if (existingProposal != null) {
+            System.out.println("A proposal for this order already exists.");
+        } else {
+            Proposal proposal = new Proposal();
+            proposal.setOrder(selectedOrder);
+            proposal.setSpecialist(specialist);
+            proposal.setProposedPrice(233.3);
+            proposal.setStartTime(new Date());
+            proposal.setDuration(3);
+            ServiceLocator.getProposalService().saveProposal(proposal);
+            System.out.println("Proposal created and saved successfully.");
+        }
+    }
+
+    private static void chooseOrderProposal(Customer customer){
+
+    }
 
 
 }
+
+
+
+

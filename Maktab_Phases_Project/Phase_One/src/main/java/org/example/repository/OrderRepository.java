@@ -16,6 +16,8 @@ public interface OrderRepository {
 
     List<Order> getOrdersByCustomerAndSubService(Customer customer, SubService subService);
 
+    List<Order> getOrderBySubService(SubService subService);
+
     void updateOrder(Order order);
 
     void deleteOrder(Order order);

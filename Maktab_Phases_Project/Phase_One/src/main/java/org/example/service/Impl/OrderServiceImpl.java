@@ -37,6 +37,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getOrderBySubService(SubService subService) {
+        return orderRepository.getOrderBySubService(subService);
+    }
+
+    @Override
     public void updateOrder(Order order) {
         orderRepository.updateOrder(order);
     }

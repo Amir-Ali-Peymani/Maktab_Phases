@@ -1,6 +1,8 @@
 package org.example.service.Impl;
 
+import org.example.entity.Order;
 import org.example.entity.Proposal;
+import org.example.entity.Specialist;
 import org.example.repository.ProposalRepository;
 import org.example.service.ProposalService;
 
@@ -22,6 +24,11 @@ public class ProposalServiceImpl implements ProposalService {
     @Override
     public Proposal getProposalById(Long id) {
         return proposalRepository.getProposalById(id);
+    }
+
+    @Override
+    public Proposal getProposalByOrderAndSpecialist(Order order, Specialist specialist) {
+        return proposalRepository.getProposalByOrderAndSpecialist(order, specialist);
     }
 
     @Override
