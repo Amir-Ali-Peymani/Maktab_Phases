@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        specialistSignIn();
+        specialistSignIn() ;
     }
 
     private static void addingServices() {
@@ -80,8 +80,9 @@ public class Main {
         if (!loginSuccessful) {
             System.out.println("Login failed. Please check your email and password.");
         } else {
-            makeOrder(loggedInCustomer);
+//            makeOrder(loggedInCustomer);
             // fullFillCredit(loggedInCustomer);
+            chooseOrderProposal(loggedInCustomer);
         }
     }
 
@@ -99,7 +100,8 @@ public class Main {
 
         if (loggedInSpecialist != null && loggedInSpecialist.getSpecialistStatus() == SpecialistStatus.CONFIRM ) {
 //            specialistSubServiceChoose(loggedInSpecialist);
-            specialistProposal(loggedInSpecialist);
+//            specialistProposal(loggedInSpecialist);
+            chooseOrderSpecialist(loggedInSpecialist);
         } else {
             System.out.println("Invalid login.");
         }
@@ -270,7 +272,48 @@ public class Main {
     }
 
     private static void chooseOrderProposal(Customer customer){
+        Set<Order> orders = customer.getOrders();
+        for (Order order : orders){
+            System.out.println("customer orders: ");
+            System.out.println(order.getId() + "__" + order.getProposedPrice() + "__" + order.getJobDescription());
+        }
+        Order order = ServiceLocator.getOrderService().getOrderById(3L);
+        List<Proposal> proposals = ServiceLocator.getProposalService().getAllProposals();
+        for (Proposal proposal : proposals){
+            System.out.println("Proposal: ");
+            System.out.println(proposal.getId() + "__" + proposal.getProposedPrice() + "__" + proposal.getDuration());
+        }
+        Proposal chosenProposal = ServiceLocator.getProposalService().getProposalById(3L);
+        order.setSpecialist(chosenProposal.getSpecialist());
+        order.setFinalPrice(chosenProposal.getProposedPrice());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(chosenProposal.getStartTime());
+        cal.add(Calendar.DAY_OF_MONTH, chosenProposal.getDuration());
+        Date finishDate = cal.getTime();
+        order.setCompeletionDate(finishDate);
+        order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_SELECTION);
+        ServiceLocator.getOrderService().updateOrder(order);
+    }
 
+    private static void chooseOrderSpecialist(Specialist specialist){
+        List<Proposal> proposals = specialist.getProposals();
+        for (Proposal proposal : proposals){
+            System.out.println("proposals that has chosen by the customer:");
+            if (proposal.getOrder() != null){
+                System.out.println(proposal.getOrder().getId() + " " + proposal.getOrder().getFinalPrice()
+                        + proposal.getOrder().getCustomer().getFirstName());
+            }
+        }
+        Proposal chosenProposal = ServiceLocator.getProposalService().getProposalById(3L);
+        specialist.setOrders(chosenProposal.getSpecialist().getOrders());
+        List<Order> orders = specialist.getOrders();
+        for (Order order : orders){
+            System.out.println(order.getCustomer().getFirstName());
+            if (chosenProposal.getOrder() == order){
+                order.setOrderStatus(OrderStatus.STARTED);
+            }
+        }
+        ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
     }
 
 
