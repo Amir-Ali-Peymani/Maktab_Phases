@@ -3,8 +3,11 @@ package org.example.service.Impl;
 import org.example.entity.SubService;
 import org.example.repository.SubServiceRepository;
 import org.example.service.SubServiceService;
+import org.example.util.ServiceLocator;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SubServiceServiceImpl implements SubServiceService {
 
@@ -17,7 +20,18 @@ public class SubServiceServiceImpl implements SubServiceService {
 
     @Override
     public void saveSubService(SubService subService) {
-        subServiceRepository.saveSubService(subService);
+        Set<String> addedSubServices = new HashSet<>();
+        List<SubService> subServiceList = ServiceLocator.getSubServiceService().getAllSubServices();
+
+        for (SubService subServiceLoop : subServiceList) {
+            addedSubServices.add(subServiceLoop.getName());
+        }
+        if (addedSubServices.contains(subService.getName())) {
+            System.out.println("This Sub-Service already exists in the database.");
+        } else {
+            subServiceRepository.saveSubService(subService);
+            System.out.println("Sub-Service added to the database.");
+        }
     }
 
     @Override
