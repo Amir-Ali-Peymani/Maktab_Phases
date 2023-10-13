@@ -19,6 +19,7 @@ public class SubService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(unique = true)
     private String name;
 
     private double basePrice;
