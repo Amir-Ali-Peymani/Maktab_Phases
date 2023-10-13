@@ -4,8 +4,11 @@ import org.example.base.BaseRepository;
 import org.example.entity.Service;
 import org.example.repository.ServiceRepository;
 import org.example.service.ServiceService;
+import org.example.util.ServiceLocator;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ServiceServiceImpl implements ServiceService {
 
@@ -18,7 +21,19 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public void saveService(Service service) {
-        serviceRepository.saveService(service);
+        Set<String> addedServices = new HashSet<>();
+        List<Service> services = ServiceLocator.getServiceService().getAllServices();
+
+        for (Service loopService : services) {
+            addedServices.add(loopService.getName());
+        }
+
+        if (addedServices.contains(service.getName())) {
+            System.out.println("This service already exists in the database.");
+        } else {
+            serviceRepository.saveService(service);
+            System.out.println("Service added to the database.");
+        }
     }
 
     @Override
