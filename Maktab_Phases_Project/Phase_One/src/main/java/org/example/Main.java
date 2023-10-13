@@ -9,26 +9,14 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        specialistSignIn() ;
+        customerSignIn();
     }
 
     private static void addingServices() {
         Service service = new Service();
         service.setName("Service Name");
+        ServiceLocator.getServiceService().saveService(service);
 
-        Set<String> addedServices = new HashSet<>();
-        List<Service> services = ServiceLocator.getServiceService().getAllServices();
-
-        for (Service loopService : services) {
-            addedServices.add(loopService.getName());
-        }
-
-        if (addedServices.contains(service.getName())) {
-            System.out.println("This service already exists in the database.");
-        } else {
-            ServiceLocator.getServiceService().saveService(service);
-            System.out.println("Service added to the database.");
-        }
     }
 
     private static void addingSubService() {
@@ -38,19 +26,8 @@ public class Main {
         subService.setBasePrice(23000);
         subService.setDescription("Description for Sub-Service");
         subService.setService(service);
+        ServiceLocator.getSubServiceService().saveSubService(subService);
 
-        Set<String> addedSubServices = new HashSet<>();
-        List<SubService> subServiceList = ServiceLocator.getSubServiceService().getAllSubServices();
-
-        for (SubService subServiceLoop : subServiceList) {
-            addedSubServices.add(subServiceLoop.getName());
-        }
-        if (addedSubServices.contains(subService.getName())) {
-            System.out.println("This Sub-Service already exists in the database.");
-        } else {
-            ServiceLocator.getSubServiceService().saveSubService(subService);
-            System.out.println("Sub-Service added to the database.");
-        }
     }
 
     private static void signInAdmin() {
@@ -80,9 +57,9 @@ public class Main {
         if (!loginSuccessful) {
             System.out.println("Login failed. Please check your email and password.");
         } else {
-//            makeOrder(loggedInCustomer);
+            makeOrder(loggedInCustomer);
             // fullFillCredit(loggedInCustomer);
-            chooseOrderProposal(loggedInCustomer);
+//            chooseOrderProposal(loggedInCustomer);
         }
     }
 
@@ -101,7 +78,8 @@ public class Main {
         if (loggedInSpecialist != null && loggedInSpecialist.getSpecialistStatus() == SpecialistStatus.CONFIRM ) {
 //            specialistSubServiceChoose(loggedInSpecialist);
 //            specialistProposal(loggedInSpecialist);
-            chooseOrderSpecialist(loggedInSpecialist);
+//            chooseOrderSpecialist(loggedInSpecialist);
+            specialistSubServiceChoose(loggedInSpecialist);
         } else {
             System.out.println("Invalid login.");
         }
@@ -113,19 +91,8 @@ public class Main {
         customer.setFirstName("Amir ali");
         customer.setLastName("Peymani");
         customer.setPassword("1234");
+        ServiceLocator.getCustomerService().saveCustomer(customer);
 
-        Set<String> addedCustomer = new HashSet<>();
-        List<Customer> customerList = ServiceLocator.getCustomerService().getAllCustomer();
-
-        for (Customer customerLoop : customerList) {
-            addedCustomer.add(customerLoop.getEmail());
-        }
-        if (addedCustomer.contains(customer.getEmail())) {
-            System.out.println("this customer already exists");
-        } else {
-            ServiceLocator.getCustomerService().saveCustomer(customer);
-            System.out.println("Customer added to the database");
-        }
     }
 
     private static void makeOrder(Customer customer) {
@@ -142,7 +109,6 @@ public class Main {
             }
             order.setSubService(subService);
             order.setCustomer(customer);
-
             ServiceLocator.getOrderService().saveOrder(order);
             System.out.println("Order added to the database.");
         } else {
