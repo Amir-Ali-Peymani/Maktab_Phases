@@ -49,6 +49,8 @@ public class Order {
     @OneToMany(mappedBy = "specialist")
     private List<Proposal> proposals;
 
+    @OneToMany(mappedBy = "order")
+    private List<Review> reviews;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
