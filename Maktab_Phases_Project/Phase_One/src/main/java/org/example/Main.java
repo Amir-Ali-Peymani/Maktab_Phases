@@ -2,21 +2,52 @@ package org.example;
 
 import org.example.entity.*;
 import org.example.util.ServiceLocator;
+import org.example.util.Validation;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 
 
 public class Main {
-    public static void main(String[] args) {
-        customerSignIn();
+    public static void main(String[] args) throws IOException {
+        enrollSpecialist();
+
+    }
+
+    private static void deleteSpecialistFromSubService(){
+        SubService subService = ServiceLocator.getSubServiceService().getSubServiceById(1L);
+        for (Specialist specialistLoop : subService.getSpecialist()){
+            System.out.println("Id: "+specialistLoop.getId() +
+                    "First Name"+specialistLoop.getFirstName());;
+        }
+        Specialist specialist = ServiceLocator.getSpecialtyService().getSpecialistById(1L);
+        subService.getSpecialist().removeIf(specialist::equals);
     }
 
     private static void addingServices() {
         Service service = new Service();
         service.setName("Service Name");
         ServiceLocator.getServiceService().saveService(service);
+    }
 
+    private static void updatingService(){
+        Service service = ServiceLocator.getServiceService().getServiceByName("Service Name");
+        service.setName("service");
+        ServiceLocator.getServiceService().updateService(service);
+    }
+
+    private static void readService(){
+        Service service = ServiceLocator.getServiceService().getServiceByName("service");
+        System.out.println("Id: "+service.getId()+"- Name: "+service.getName());
+    }
+
+    private static void deleteService(){
+        Service service = ServiceLocator.getServiceService().getServiceById(1L);
+        ServiceLocator.getServiceService().deleteService(service);
     }
 
     private static void addingSubService() {
@@ -27,8 +58,20 @@ public class Main {
         subService.setDescription("Description for Sub-Service");
         subService.setService(service);
         ServiceLocator.getSubServiceService().saveSubService(subService);
-
     }
+
+    private static void updatingSubService(){
+        SubService subService = ServiceLocator.getSubServiceService().getSubServiceById(1L);
+        subService.setName("Sub-Service");
+        ServiceLocator.getSubServiceService().updateSubService(subService);
+    }
+
+    private static void deletingSubService(){
+        SubService subService = ServiceLocator.getSubServiceService().getSubServiceById(2L);
+        ServiceLocator.getSubServiceService().deleteSubService(subService);
+    }
+
+
 
     private static void signInAdmin() {
         List<Admin> admins = ServiceLocator.getAdminService().getAllAdmin();
@@ -38,28 +81,6 @@ public class Main {
             } else {
                 System.out.println(" you have failed to signIn");
             }
-        }
-    }
-
-    private static void customerSignIn() {
-        List<Customer> customers = ServiceLocator.getCustomerService().getAllCustomer();
-        boolean loginSuccessful = false;
-        Customer loggedInCustomer = null;
-        for (Customer customer : customers) {
-            if (customer.getEmail().equals("amirali@gmail.com") && customer.getPassword().equals("1234")) {
-                System.out.println("You have logged in successfully");
-                loginSuccessful = true;
-                loggedInCustomer = customer;
-                break;
-            }
-        }
-
-        if (!loginSuccessful) {
-            System.out.println("Login failed. Please check your email and password.");
-        } else {
-            makeOrder(loggedInCustomer);
-            // fullFillCredit(loggedInCustomer);
-//            chooseOrderProposal(loggedInCustomer);
         }
     }
 
@@ -85,6 +106,28 @@ public class Main {
         }
     }
 
+    private static void customerSignIn() {
+        List<Customer> customers = ServiceLocator.getCustomerService().getAllCustomer();
+        boolean loginSuccessful = false;
+        Customer loggedInCustomer = null;
+        for (Customer customer : customers) {
+            if (customer.getEmail().equals("amirali@gmail.com") && customer.getPassword().equals("1234")) {
+                System.out.println("You have logged in successfully");
+                loginSuccessful = true;
+                loggedInCustomer = customer;
+                break;
+            }
+        }
+
+        if (!loginSuccessful) {
+            System.out.println("Login failed. Please check your email and password.");
+        } else {
+            makeOrder(loggedInCustomer);
+            // fullFillCredit(loggedInCustomer);
+//            chooseOrderProposal(loggedInCustomer);
+        }
+    }
+
     private static void customerSignUp() {
         Customer customer = new Customer();
         customer.setEmail("amirali@gmail.com");
@@ -92,49 +135,35 @@ public class Main {
         customer.setLastName("Peymani");
         customer.setPassword("1234");
         ServiceLocator.getCustomerService().saveCustomer(customer);
+    }
 
+    private static void customerUpdate(){
+        Customer customer = ServiceLocator.getCustomerService().getCustomerById(1L);
+        customer.setLastName("nasery");
+        ServiceLocator.getCustomerService().updateCustomer(customer);
+    }
+
+    private static void customerRead(){
+        Customer customer = ServiceLocator.getCustomerService().getCustomerById(1L);
+        System.out.println("Id: " + customer.getId() + "- Name: " + customer.getFirstName()
+        + "-Last Name: " + customer.getLastName() + "- Email: " + customer.getEmail());
+    }
+
+    private static void deleteCustomer(){
+        Customer customer = ServiceLocator.getCustomerService().getCustomerById(1L);
+        ServiceLocator.getCustomerService().deleteCustomer(customer);
     }
 
     private static void makeOrder(Customer customer) {
+        Order order = new Order();
         SubService subService = ServiceLocator.getSubServiceService().getSubServiceByName("Sub-Service 1");
-        List<Order> orders = ServiceLocator.getOrderService().getOrdersByCustomerAndSubService(customer, subService);
-        if (orders.isEmpty()) {
-            Order order = new Order();
-            order.setProposedPrice(123.12);
-            order.setJobDescription("I want someone who can do the job");
-            Date currentDate = new Date();
-            order.setDate(currentDate);
-            if (order.getSpecialist() == null) {
-                order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_PROPOSAL);
-            }
-            order.setSubService(subService);
-            order.setCustomer(customer);
-            ServiceLocator.getOrderService().saveOrder(order);
-            System.out.println("Order added to the database.");
-        } else {
-            System.out.println("This order already exists in the table.");
-        }
-    }
-
-    private static void fullFillCredit(Customer customer) {
-        List<Credit> credits = ServiceLocator.getCreditService().getAllCredit();
-        boolean customerHasCredit = false;
-
-        for (Credit creditLoop : credits) {
-            if (creditLoop.getCustomer().equals(customer)) {
-                System.out.println("This customer already has credit.");
-                customerHasCredit = true;
-                break;
-            }
-        }
-
-        if (!customerHasCredit) {
-            Credit credit = new Credit();
-            credit.setBalance(100.0);
-            credit.setCustomer(customer);
-            ServiceLocator.getCreditService().saveCredit(credit);
-            System.out.println("Credit added for the customer.");
-        }
+        order.setProposedPrice(123.12);
+        order.setJobDescription("I want someone who can do the job");
+        Date currentDate = new Date();
+        order.setDate(currentDate);
+        order.setSubService(subService);
+        order.setCustomer(customer);
+        ServiceLocator.getOrderService().saveOrder(order);
     }
 
     private static void writeReview(Customer customer) {
@@ -145,26 +174,33 @@ public class Main {
 
     }
 
-    private static void enrollSpecialist() {
+    private static void enrollSpecialist() throws IOException {
         Specialist specialist = new Specialist();
         specialist.setFirstName("mamad");
         specialist.setLastName("hoseiny");
         specialist.setEmail("mamad@gmail.com");
-        specialist.setPassword("234223424");
+        specialist.setPassword("saSswod1");
+        Path imagePath = Paths.get("D:\\\\profile\\\\IMG_9341.jpg");
+        byte[] profilePicture = Files.readAllBytes(imagePath);
+        specialist.setProfilePicture(profilePicture);
         specialist.setSpecialistStatus(SpecialistStatus.NEW);
+        ServiceLocator.getSpecialtyService().saveSpecialist(specialist);
+    }
 
-        Set<String> addedSpecialist = new HashSet<>();
-        List<Specialist> specialistsList = ServiceLocator.getSpecialtyService().getAllSpecialists();
+    private static void updateSpecialist(){
+        Specialist specialist = ServiceLocator.getSpecialtyService().getSpecialistById(1L);
+        specialist.setPassword("22");
+        ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
+    }
 
-        for (Specialist specialistLoop : specialistsList) {
-            addedSpecialist.add(specialistLoop.getEmail());
-        }
-        if (addedSpecialist.contains(specialist.getEmail())) {
-            System.out.println("this specialist already exists");
-        } else {
-            ServiceLocator.getSpecialtyService().saveSpecialist(specialist);
-            System.out.println("specialist added to the database");
-        }
+    private static void readSpecialist(){
+        Specialist specialist = ServiceLocator.getSpecialtyService().getSpecialistById(1L);
+        System.out.println("Id: " + specialist.getId() + "-First Name:" + specialist.getFirstName()
+        + "-Last Name: " + specialist.getLastName() + "-Email: " + specialist.getEmail());}
+
+    private static void deleteSpecialist(){
+        Specialist specialist = ServiceLocator.getSpecialtyService().getSpecialistById(1L);
+        ServiceLocator.getSpecialtyService().deleteSpecialist(specialist);
     }
 
     private static void specialistStatus() {
@@ -181,105 +217,105 @@ public class Main {
     }
 
     private static void specialistSubServiceChoose(Specialist specialist) {
-        if (specialist.getSubService() != null) {
-            System.out.println("you have already chosen the sub-service which is: "
-                    + specialist.getSubService().getName());
-            return;
-        }
-        List<SubService> availableSubServices = ServiceLocator.getSubServiceService().getAllSubServices();
-        System.out.println("available sub-services: ");
-        for (SubService subServiceLoop : availableSubServices) {
-            System.out.println(subServiceLoop.getId() + ":" + subServiceLoop.getName());
-        }
-        long chosenSubService = 1L;
-        SubService selectedSubService = ServiceLocator.getSubServiceService().getSubServiceById(chosenSubService);
-        if (selectedSubService != null) {
-            specialist.setSubService(selectedSubService);
-            ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
-            System.out.println("Specialist " + specialist.getId() + " has chosen the sub-service: " +
-                    selectedSubService.getName());
-        } else {
-            System.out.println("Invalid sub-service choice. Please choose from the available sub-services.");
-        }
+//        if (specialist.getSubServices() != null) {
+//            System.out.println("you have already chosen the sub-service which is: "
+//                    + specialist.getSubServices());
+//            return;
+//        }
+//        List<SubService> availableSubServices = ServiceLocator.getSubServiceService().getAllSubServices();
+//        System.out.println("available sub-services: ");
+//        for (SubService subServiceLoop : availableSubServices) {
+//            System.out.println(subServiceLoop.getId() + ":" + subServiceLoop.getName());
+//        }
+//        long chosenSubService = 1L;
+//        SubService selectedSubService = ServiceLocator.getSubServiceService().getSubServiceById(chosenSubService);
+//        if (selectedSubService != null) {
+//            specialist.setSubService(selectedSubService);
+//            ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
+//            System.out.println("Specialist " + specialist.getId() + " has chosen the sub-service: " +
+//                    selectedSubService.getName());
+//        } else {
+//            System.out.println("Invalid sub-service choice. Please choose from the available sub-services.");
+//        }
     }
 
     private static void specialistProposal(Specialist specialist) {
-        SubService specialistSubService = specialist.getSubService();
-        List<Order> ordersForSpecialistSubService = ServiceLocator.getOrderService().getOrderBySubService(specialistSubService);
-
-        if (ordersForSpecialistSubService.isEmpty()) {
-            System.out.println("No orders available for the specialist's sub-service.");
-        } else {
-            System.out.println("Available Orders for Specialist's Sub-Service:");
-            for (Order order : ordersForSpecialistSubService) {
-                System.out.println("ID of order: " + order.getId() +"||"
-                 + "Customer Name: " + order.getCustomer().getFirstName()+"||"
-                 + "Proposed Price: " + order.getProposedPrice()+"||"
-                 + "Job description: " + order.getJobDescription()+"||"
-                 + "Date: " + order.getDate());
-            }
-        }
-
-        Order selectedOrder = ServiceLocator.getOrderService().getOrderById(3L);
-        Proposal existingProposal = ServiceLocator.getProposalService().getProposalByOrderAndSpecialist(selectedOrder, specialist);
-
-        if (existingProposal != null) {
-            System.out.println("A proposal for this order already exists.");
-        } else {
-            Proposal proposal = new Proposal();
-            proposal.setOrder(selectedOrder);
-            proposal.setSpecialist(specialist);
-            proposal.setProposedPrice(233.3);
-            proposal.setStartTime(new Date());
-            proposal.setDuration(3);
-            ServiceLocator.getProposalService().saveProposal(proposal);
-            System.out.println("Proposal created and saved successfully.");
-        }
+//        SubService specialistSubService = specialist.getSubService();
+//        List<Order> ordersForSpecialistSubService = ServiceLocator.getOrderService().getOrderBySubService(specialistSubService);
+//
+//        if (ordersForSpecialistSubService.isEmpty()) {
+//            System.out.println("No orders available for the specialist's sub-service.");
+//        } else {
+//            System.out.println("Available Orders for Specialist's Sub-Service:");
+//            for (Order order : ordersForSpecialistSubService) {
+//                System.out.println("ID of order: " + order.getId() +"||"
+//                 + "Customer Name: " + order.getCustomer().getFirstName()+"||"
+//                 + "Proposed Price: " + order.getProposedPrice()+"||"
+//                 + "Job description: " + order.getJobDescription()+"||"
+//                 + "Date: " + order.getDate());
+//            }
+//        }
+//
+//        Order selectedOrder = ServiceLocator.getOrderService().getOrderById(3L);
+//        Proposal existingProposal = ServiceLocator.getProposalService().getProposalByOrderAndSpecialist(selectedOrder, specialist);
+//
+//        if (existingProposal != null) {
+//            System.out.println("A proposal for this order already exists.");
+//        } else {
+//            Proposal proposal = new Proposal();
+//            proposal.setOrder(selectedOrder);
+//            proposal.setSpecialist(specialist);
+//            proposal.setProposedPrice(233.3);
+//            proposal.setStartTime(new Date());
+//            proposal.setDuration(3);
+//            ServiceLocator.getProposalService().saveProposal(proposal);
+//            System.out.println("Proposal created and saved successfully.");
+//        }
     }
 
     private static void chooseOrderProposal(Customer customer){
-        Set<Order> orders = customer.getOrders();
-        for (Order order : orders){
-            System.out.println("customer orders: ");
-            System.out.println(order.getId() + "__" + order.getProposedPrice() + "__" + order.getJobDescription());
-        }
-        Order order = ServiceLocator.getOrderService().getOrderById(3L);
-        List<Proposal> proposals = ServiceLocator.getProposalService().getAllProposals();
-        for (Proposal proposal : proposals){
-            System.out.println("Proposal: ");
-            System.out.println(proposal.getId() + "__" + proposal.getProposedPrice() + "__" + proposal.getDuration());
-        }
-        Proposal chosenProposal = ServiceLocator.getProposalService().getProposalById(3L);
-        order.setSpecialist(chosenProposal.getSpecialist());
-        order.setFinalPrice(chosenProposal.getProposedPrice());
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(chosenProposal.getStartTime());
-        cal.add(Calendar.DAY_OF_MONTH, chosenProposal.getDuration());
-        Date finishDate = cal.getTime();
-        order.setCompeletionDate(finishDate);
-        order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_SELECTION);
-        ServiceLocator.getOrderService().updateOrder(order);
+//        Set<Order> orders = customer.getOrders();
+//        for (Order order : orders){
+//            System.out.println("customer orders: ");
+//            System.out.println(order.getId() + "__" + order.getProposedPrice() + "__" + order.getJobDescription());
+//        }
+//        Order order = ServiceLocator.getOrderService().getOrderById(3L);
+//        List<Proposal> proposals = ServiceLocator.getProposalService().getAllProposals();
+//        for (Proposal proposal : proposals){
+//            System.out.println("Proposal: ");
+//            System.out.println(proposal.getId() + "__" + proposal.getProposedPrice() + "__" + proposal.getDuration());
+//        }
+//        Proposal chosenProposal = ServiceLocator.getProposalService().getProposalById(3L);
+//        order.setSpecialist(chosenProposal.getSpecialist());
+//        order.setFinalPrice(chosenProposal.getProposedPrice());
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(chosenProposal.getStartTime());
+//        cal.add(Calendar.DAY_OF_MONTH, chosenProposal.getDuration());
+//        Date finishDate = cal.getTime();
+//        order.setCompeletionDate(finishDate);
+//        order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_SELECTION);
+//        ServiceLocator.getOrderService().updateOrder(order);
     }
 
     private static void chooseOrderSpecialist(Specialist specialist){
-        List<Proposal> proposals = specialist.getProposals();
-        for (Proposal proposal : proposals){
-            System.out.println("proposals that has chosen by the customer:");
-            if (proposal.getOrder() != null){
-                System.out.println(proposal.getOrder().getId() + " " + proposal.getOrder().getFinalPrice()
-                        + proposal.getOrder().getCustomer().getFirstName());
-            }
-        }
-        Proposal chosenProposal = ServiceLocator.getProposalService().getProposalById(3L);
-        specialist.setOrders(chosenProposal.getSpecialist().getOrders());
-        List<Order> orders = specialist.getOrders();
-        for (Order order : orders){
-            System.out.println(order.getCustomer().getFirstName());
-            if (chosenProposal.getOrder() == order){
-                order.setOrderStatus(OrderStatus.STARTED);
-            }
-        }
-        ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
+//        List<Proposal> proposals = specialist.getProposals();
+//        for (Proposal proposal : proposals){
+//            System.out.println("proposals that has chosen by the customer:");
+//            if (proposal.getOrder() != null){
+//                System.out.println(proposal.getOrder().getId() + " " + proposal.getOrder().getFinalPrice()
+//                        + proposal.getOrder().getCustomer().getFirstName());
+//            }
+//        }
+//        Proposal chosenProposal = ServiceLocator.getProposalService().getProposalById(3L);
+//        specialist.setOrders(chosenProposal.getSpecialist().getOrders());
+//        List<Order> orders = specialist.getOrders();
+//        for (Order order : orders){
+//            System.out.println(order.getCustomer().getFirstName());
+//            if (chosenProposal.getOrder() == order){
+//                order.setOrderStatus(OrderStatus.STARTED);
+//            }
+//        }
+//        ServiceLocator.getSpecialtyService().updateSpecialist(specialist);
     }
 
 
