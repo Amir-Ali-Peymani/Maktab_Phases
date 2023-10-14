@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.base.BaseRepository;
 import org.example.entity.Credit;
 import org.example.repository.CreditRepository;
@@ -21,7 +22,16 @@ public class CreditRepositoryImpl extends BaseRepository implements CreditReposi
 
     @Override
     public Credit getCreditById(Long id) {
-        return em.find(Credit.class, id);
+        try {
+            Credit credit = em.find(Credit.class, id);
+            if (credit == null) {
+                throw new EntityNotFoundException("Credit not found with id: " + id);
+            }
+            return credit;
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Credit not found with id: " + id);
+        }
+
     }
 
     @Override
