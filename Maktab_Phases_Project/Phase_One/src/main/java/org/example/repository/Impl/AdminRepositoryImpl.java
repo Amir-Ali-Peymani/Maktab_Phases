@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.base.BaseRepository;
 import org.example.entity.Admin;
 import org.example.entity.Credit;
@@ -10,7 +11,15 @@ import java.util.List;
 public class AdminRepositoryImpl extends BaseRepository implements AdminRepository {
     @Override
     public Admin getAdminById(long id) {
-        return em.find(Admin.class, id);
+        try {
+            Admin admin = em.find(Admin.class, id);
+            if (admin == null) {
+                throw new EntityNotFoundException("Admin not found with id: " + id);
+            }
+            return admin;
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Admin not found with id: " + id);
+        }
     }
 
     @Override
