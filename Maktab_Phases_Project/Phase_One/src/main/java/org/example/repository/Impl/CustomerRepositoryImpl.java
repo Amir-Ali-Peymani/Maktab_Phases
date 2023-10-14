@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.base.BaseRepository;
 import org.example.entity.Customer;
 import org.example.repository.CustomerRepository;
@@ -23,7 +24,16 @@ public class CustomerRepositoryImpl extends BaseRepository implements CustomerRe
 
     @Override
     public Customer getCustomerById(Long id) {
-        return em.find(Customer.class, id);
+        try {
+            Customer customer = em.find(Customer.class, id);
+            if (customer == null) {
+                throw new EntityNotFoundException("Customer not found with id: " + id);
+            }
+            return customer;
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Customer not found with id: "+ id);
+        }
+
     }
 
     @Override
