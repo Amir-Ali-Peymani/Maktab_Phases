@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import org.example.base.BaseRepository;
 import org.example.entity.Service;
@@ -23,7 +24,15 @@ public class SubServiceRepositoryImpl extends BaseRepository implements SubServi
 
     @Override
     public SubService getSubServiceById(Long id) {
-        return em.find(SubService.class, id);
+        try {
+            SubService subService = em.find(SubService.class, id);
+            if (subService == null) {
+                throw new EntityNotFoundException("SubService not found with id: " + id);
+            }
+            return subService;
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException(("subService not found" + id));
+        }
     }
 
     @Override
@@ -33,7 +42,7 @@ public class SubServiceRepositoryImpl extends BaseRepository implements SubServi
                     .setParameter("name", name)
                     .getSingleResult();
         } catch (NoResultException e) {
-            return null;
+            throw new EntityNotFoundException("SubService not found with name: " + name);
         }
     }
 

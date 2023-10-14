@@ -32,6 +32,11 @@ public class Specialist {
     @Column(name= "password", nullable = false)
     private String password;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
     @Enumerated(EnumType.STRING)
     private SpecialistStatus specialistStatus;
 
@@ -39,15 +44,12 @@ public class Specialist {
     private Credit credit;
 
     @OneToMany(mappedBy = "specialist")
-    private List<Review> reviews;
-
-    @OneToMany(mappedBy = "specialist")
     private List<Proposal> proposals;
 
     @OneToMany(mappedBy = "specialist")
     private List<Order> orders;
 
-    @ManyToOne
+    @ManyToMany
     @JoinColumn(name = "subService_id")
-    private SubService subService;
+    private List<SubService> subServices;
 }

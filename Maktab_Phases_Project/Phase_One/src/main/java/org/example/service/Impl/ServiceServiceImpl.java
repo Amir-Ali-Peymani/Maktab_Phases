@@ -38,7 +38,13 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Service getServiceById(long id) {
-        return serviceRepository.getServiceById(id);
+        Service service = serviceRepository.getServiceById(id);
+        if (service == null) {
+            System.out.println("Service not found");
+            return null;
+        } else {
+            return service;
+        }
     }
 
     @Override
@@ -53,11 +59,23 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public void updateService(Service service) {
-        serviceRepository.updateService(service);
+        for (Service serviceLoop : getAllServices()) {
+            if (serviceLoop.equals(service)) {
+                serviceRepository.updateService(service);
+            } else {
+                System.out.println("this service doesn't exist");
+            }
+        }
     }
 
     @Override
     public void deleteService(Service service) {
-        serviceRepository.deleteService(service);
+        for (Service serviceLoop : getAllServices()){
+            if (serviceLoop.equals(service)){
+                serviceRepository.deleteService(service);
+            } else {
+                System.out.println("this service doesn't exist");
+            }
+        }
     }
 }

@@ -26,11 +26,11 @@ public class SubService {
 
     private String description;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "service_id")
     private Service service;
 
-    @OneToMany(mappedBy = "subService")
+    @ManyToMany(mappedBy = "subServices")
     private List<Specialist> specialist;
 
     @OneToMany(mappedBy = "subService")

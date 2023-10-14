@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.base.BaseRepository;
 import org.example.entity.Review;
 import org.example.repository.ReviewRepository;
@@ -22,7 +23,15 @@ public class ReviewRepositoryImpl extends BaseRepository implements ReviewReposi
 
     @Override
     public Review getReview(Long id) {
-        return em.find(Review.class, id);
+        try {
+            Review review = em.find(Review.class, id);
+            if (review == null) {
+                throw new EntityNotFoundException("Review not found with id: " + id);
+            }
+            return review
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Review not found with id: " + id);
+        }
     }
 
     @Override

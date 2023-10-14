@@ -19,7 +19,6 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
     private int rating;
 
     private String comment;
@@ -29,8 +28,8 @@ public class Review {
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "specialist_id")
-    private Specialist specialist;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
 
 

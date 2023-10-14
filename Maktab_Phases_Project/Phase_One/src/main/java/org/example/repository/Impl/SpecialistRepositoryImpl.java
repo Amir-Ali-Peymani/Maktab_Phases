@@ -1,7 +1,9 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.base.BaseRepository;
 import org.example.entity.Specialist;
+import org.example.entity.SubService;
 import org.example.repository.SpecialistRepository;
 
 import java.util.List;
@@ -21,7 +23,15 @@ public class SpecialistRepositoryImpl extends BaseRepository implements Speciali
 
     @Override
     public Specialist getSpecialistById(Long id) {
-        return em.find(Specialist.class, id);
+        try {
+            Specialist specialist = em.find(Specialist.class, id);
+            if (specialist == null) {
+                throw new EntityNotFoundException("SubService not found with id: " + id);
+            }
+            return specialist;
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException(("specialist not found" + id));
+        }
     }
 
     @Override

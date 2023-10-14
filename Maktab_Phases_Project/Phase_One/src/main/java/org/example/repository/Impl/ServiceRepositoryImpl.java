@@ -1,5 +1,6 @@
 package org.example.repository.Impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import org.example.base.BaseRepository;
 import org.example.entity.Service;
@@ -22,7 +23,15 @@ public class ServiceRepositoryImpl extends BaseRepository implements ServiceRepo
 
     @Override
     public Service getServiceById(Long id) {
-        return em.find(Service.class, id);
+        try {
+            Service service = em.find(Service.class, id);
+            if (service == null) {
+                throw new EntityNotFoundException("Service not found whit id: "+ id);
+            }
+            return service;
+        } catch (EntityNotFoundException e) {
+            throw new EntityNotFoundException("Service not found" + id);
+        }
     }
 
     @Override
@@ -32,7 +41,7 @@ public class ServiceRepositoryImpl extends BaseRepository implements ServiceRepo
                     .setParameter("name", name)
                     .getSingleResult();
         } catch (NoResultException e) {
-            return null;
+            throw new EntityNotFoundException("Service not found with name: " + name);
         }
     }
 

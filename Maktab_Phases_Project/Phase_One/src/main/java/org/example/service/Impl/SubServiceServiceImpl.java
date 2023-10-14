@@ -28,7 +28,7 @@ public class SubServiceServiceImpl implements SubServiceService {
         }
         if (addedSubServices.contains(subService.getName())) {
             System.out.println("This Sub-Service already exists in the database.");
-        } else {
+        } else if (subService.getService() != null){
             subServiceRepository.saveSubService(subService);
             System.out.println("Sub-Service added to the database.");
         }
