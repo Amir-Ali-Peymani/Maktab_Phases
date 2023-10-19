@@ -1,18 +1,17 @@
 package com.example.demo.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
-
 @Entity
-@Builder
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Customer {
+public class Admin {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,14 +27,5 @@ public class Customer {
 
     @Column(name= "password", nullable = false)
     private String password;
-
-    @OneToOne(mappedBy = "customer")
-    private Credit credit;
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<Order> orders;
-
-    @OneToMany(mappedBy = "customer")
-    private Set<Review> reviews;
 
 }
