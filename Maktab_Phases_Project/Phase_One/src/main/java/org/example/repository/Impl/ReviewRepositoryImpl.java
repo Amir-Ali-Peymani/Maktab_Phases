@@ -28,7 +28,7 @@ public class ReviewRepositoryImpl extends BaseRepository implements ReviewReposi
             if (review == null) {
                 throw new EntityNotFoundException("Review not found with id: " + id);
             }
-            return review
+            return review;
         } catch (EntityNotFoundException e) {
             throw new EntityNotFoundException("Review not found with id: " + id);
         }
