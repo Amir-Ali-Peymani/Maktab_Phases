@@ -6,4 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SpecialistRepository extends JpaRepository<Specialist, Long> {
+
+    Specialist getSpecialistByEmailAndPassword(String email, String password);
+
+    Specialist findByEmail(String email);
+
 }

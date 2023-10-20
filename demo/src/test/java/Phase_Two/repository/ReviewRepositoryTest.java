@@ -16,6 +16,20 @@ class ReviewRepositoryTest {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private ServiceRepository serviceRepository;
+
+    @Autowired
+    private SubServiceRepository subServiceRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+
+
     @Test
     public void testCreateReview(){
         Customer customer = Customer.builder()
@@ -24,17 +38,19 @@ class ReviewRepositoryTest {
                 .email("peymani@gmail.com")
                 .password("password")
                 .build();
+
+        customerRepository.save(customer);
         Service service = Service.builder()
                 .name("testService")
                 .build();
-
+        serviceRepository.save(service);
         SubService subService = SubService.builder()
                 .service(service)
                 .name("testSubService")
                 .basePrice(23444)
                 .description("test description")
                 .build();
-
+        subServiceRepository.save(subService);
 
         Order order = Order.builder()
                 .proposedPrice(234342)
@@ -44,7 +60,7 @@ class ReviewRepositoryTest {
                 .subService(subService)
                 .orderStatus(OrderStatus.AWAITING_SPECIALIST_PROPOSAL)
                 .build();
-
+        orderRepository.save(order);
         Review review = Review.builder()
                 .rating(33)
                 .comment("test comment")

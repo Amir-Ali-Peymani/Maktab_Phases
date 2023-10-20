@@ -23,5 +23,4 @@ public class Service {
     @OneToMany(mappedBy = "service")
     private Set<SubService> subServices;
 
-
 }

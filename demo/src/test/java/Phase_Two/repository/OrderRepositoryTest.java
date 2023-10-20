@@ -15,26 +15,35 @@ class OrderRepositoryTest {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private ServiceRepository serviceRepository;
+
+    @Autowired
+    private SubServiceRepository subServiceRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
     @Test
     public void testCreateOrder(){
         Service service = Service.builder()
                 .name("testService")
                 .build();
-
+        serviceRepository.save(service);
         SubService subService = SubService.builder()
                 .service(service)
                 .name("testSubService")
                 .basePrice(23444)
                 .description("test description")
                 .build();
-
+        subServiceRepository.save(subService);
         Customer customer = Customer.builder()
                 .firstName("Jones")
                 .lastName("peymani")
                 .email("peyman@gmail.com")
                 .password("23434343")
                 .build();
-
+        customerRepository.save(customer);
         Order order = Order.builder()
                 .proposedPrice(234342)
                 .jobDescription("doing it right, and in short time")

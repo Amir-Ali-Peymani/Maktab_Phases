@@ -1,9 +1,12 @@
 package Phase_Two.repository;
 
-import Phase_Two.entity.Customer;
+import Phase_Two.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,6 +15,12 @@ class CustomerRepositoryTest {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private ProposalRepository proposalRepository;
 
     @Test
     public void testCreateCustomer(){
@@ -22,6 +31,30 @@ class CustomerRepositoryTest {
                 .password("password")
                 .build();
         customerRepository.save(customer);
+    }
+
+
+    @Test
+    public void testReadProposal(){
+        Customer customer = customerRepository.findCustomerByEmailAndPassword("password", "password");
+        Set<Order> orders = customer.getOrders();
+        for(Order order : orders){
+            System.out.println("Order Id: " + order.getId()+ "Order subService" + order.getSubService().getName());
+        }
+        Order order = orderRepository.findById(2L).orElse(null);
+        assertNotNull(order);
+        List<Proposal> proposals = order.getProposals();
+        for (Proposal proposal : proposals) {
+            System.out.println("proposal Id: " + proposal.getId()+ "proposal price: " +proposal.getProposedPrice()+
+                    "proposal specialist: " + proposal.getSpecialist().getFirstName()+
+            "specialist id: " + proposal.getSpecialist().getId());
+        }
+        Proposal proposal = proposalRepository.findById(1L).orElse(null);
+        assertNotNull(proposal);
+        order.setSpecialist(proposal.getSpecialist());
+        order.setOrderStatus(OrderStatus.STARTED);
+        order.setFinalPrice(proposal.getProposedPrice());
+        orderRepository.save(order);
     }
 
 

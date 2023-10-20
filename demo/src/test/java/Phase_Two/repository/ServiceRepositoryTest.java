@@ -23,14 +23,14 @@ class ServiceRepositoryTest {
 
     @Test
     public void testReadService(){
-        Service service = serviceRepository.findById(1L).orElse(null);
+        Service service = serviceRepository.getServiceByName("TestService");
         assertNotNull(service);
         System.out.println("Service Name: " + service.getName());
     }
 
     @Test
     public void testUpdateService(){
-        Service service = serviceRepository.findById(1L).orElse(null);
+        Service service = serviceRepository.getServiceByName("TestService");
         assertNotNull(service);
         service.setName("test");
         assertEquals("test", service.getName());
@@ -39,7 +39,7 @@ class ServiceRepositoryTest {
 
 
     @Test public void deleteService(){
-        Service service = serviceRepository.findById(3L).orElse(null);
+        Service service = serviceRepository.getServiceByName("test");
         assertNotNull(service);
         serviceRepository.delete(service);
     }
