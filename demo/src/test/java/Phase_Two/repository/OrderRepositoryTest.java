@@ -56,6 +56,15 @@ class OrderRepositoryTest {
     }
 
     @Test
+    public void testWhenOrderIsDone(){
+        Order order = orderRepository.findById(2L).orElse(null);
+        assertNotNull(order);
+        order.setOrderStatus(OrderStatus.PAID);
+        orderRepository.save(order);
+    }
+
+
+    @Test
     public void testReadOrder(){
         Order order = orderRepository.findById(1L).orElse(null);
         assertNotNull(order);
