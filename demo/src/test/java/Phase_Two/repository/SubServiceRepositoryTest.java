@@ -45,8 +45,10 @@ class SubServiceRepositoryTest {
     public void testUpdateSubService(){
         SubService subService = subServiceRepository.getSubServiceByName("testSubService");
         assertNotNull(subService);
-        subService.setName("Test SubService Name");
-        assertEquals("Test SubService Name", subService.getName());
+        subService.setBasePrice(5000);
+        subService.setDescription("description changed");
+        assertEquals(5000, subService.getBasePrice());
+        assertEquals("description changed", subService.getDescription());
         subServiceRepository.save(subService);
     }
 

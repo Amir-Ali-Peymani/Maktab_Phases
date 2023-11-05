@@ -41,12 +41,12 @@ class CustomerRepositoryTest {
 
     @Test
     public void testReadProposal(){
-        Customer customer = customerRepository.findCustomerByEmailAndPassword("password", "password");
+        Customer customer = customerRepository.findCustomerByEmailAndPassword("peyman@gmail.com", "23434343");
         Set<Order> orders = customer.getOrders();
         for(Order order : orders){
             System.out.println("Order Id: " + order.getId()+ "Order subService" + order.getSubService().getName());
         }
-        Order order = orderRepository.findById(2L).orElse(null);
+        Order order = orderRepository.findById(1L).orElse(null);
         assertNotNull(order);
         List<Proposal> proposals = order.getProposals();
         for (Proposal proposal : proposals) {

@@ -39,8 +39,8 @@ class SpecialistRepositoryTest {
     public void testUpdateSpecialist(){
         Specialist specialist = specialistRepository.findByEmail("naser@gmail.com");
         assertNotNull(specialist);
-        specialist.setLastName("peymani");
-        assertEquals("peymani", specialist.getLastName());
+        specialist.setPassword("peymani");
+        assertEquals("peymani", specialist.getPassword());
         specialistRepository.save(specialist);
     }
 

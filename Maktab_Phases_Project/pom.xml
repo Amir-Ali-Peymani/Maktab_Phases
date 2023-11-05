@@ -11,6 +11,7 @@
     <modules>
         <module>Phase_One</module>
         <module>Phase_Two</module>
+        <module>Phase_Three</module>
 
     </modules>
 
