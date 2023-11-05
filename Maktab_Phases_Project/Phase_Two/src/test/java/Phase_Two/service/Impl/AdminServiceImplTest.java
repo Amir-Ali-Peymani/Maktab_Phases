@@ -13,6 +13,5 @@ class AdminServiceImplTest {
     @Autowired
     private  AdminServiceImpl adminServiceImpl;
 
-    @Test
-    public void test
+
 }
