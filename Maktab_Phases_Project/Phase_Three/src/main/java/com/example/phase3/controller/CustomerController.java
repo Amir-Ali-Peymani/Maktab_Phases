@@ -2,7 +2,8 @@ package com.example.phase3.controller;
 
 
 import com.example.phase3.entity.Customer;
-import com.example.phase3.exception.AuthenticationException;
+import com.example.phase3.exception.*;
+import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class CustomerController {
     }
 
     @PostMapping("/saveCustomer")
-    public void saveCustomer(@RequestBody Customer customer) {
+    public void saveCustomer(@RequestBody Customer customer) throws NullPointerException {
         customerService.saveCustomer(customer);
     }
 
@@ -36,6 +37,8 @@ public class CustomerController {
             return ResponseEntity.ok(customer);
         }catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (InvalidUserNameAndPasswordException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -52,12 +55,12 @@ public class CustomerController {
 
     @PutMapping("/updateCustomer/{email}")
     public void updateCustomer(@PathVariable("email") String email,
-                               @RequestBody Customer customer){
+                               @RequestBody Customer customer) throws NullPointerException, InvalidEmailException {
         customerService.updateCustomer(email, customer);
     }
 
     @DeleteMapping("/deleteCustomer/{id}")
-    public void deleteCustomer(@PathVariable("id") Long id){
+    public void deleteCustomer(@PathVariable("id") Long id) throws AuthenticationNotFoundException, InvalidIdException {
         customerService.deleteCustomer(id);
     }
 
