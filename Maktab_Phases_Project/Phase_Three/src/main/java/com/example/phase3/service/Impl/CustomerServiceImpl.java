@@ -1,7 +1,8 @@
 package com.example.phase3.service.Impl;
 
 import com.example.phase3.entity.Customer;
-import com.example.phase3.exception.AuthenticationException;
+import com.example.phase3.exception.*;
+import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.repository.CustomerRepository;
 import com.example.phase3.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -16,15 +17,22 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public void saveCustomer(Customer customer) {
+    public void saveCustomer(Customer customer) throws NullPointerException {
+            if (customer == null){
+                throw new NullPointerException();
+            }
             customerRepository.save(customer);
     }
 
     @Override
-    public Customer getCustomerByEmailAndPassword(String email, String password) throws AuthenticationException {
+    public Customer getCustomerByEmailAndPassword(String email, String password) throws AuthenticationNotFoundException,
+            InvalidUserNameAndPasswordException {
+        if(email == null || email.equals("")  || password == null || password.equals("")){
+            throw new InvalidUserNameAndPasswordException();
+        }
         Customer customer = customerRepository.findCustomerByEmailAndPassword(email, password);
         if (customer == null) {
-            throw new AuthenticationException("Could not find customer");
+            throw new AuthenticationNotFoundException();
         }
         return customer;
     }
@@ -35,16 +43,25 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(String email, Customer customer) {
+    public void updateCustomer(String email, Customer customer) throws InvalidEmailException, NullPointerException {
+        if (email == null || email.equals("")) {
+            throw new InvalidEmailException();
+        }
         Customer customerUpdate = customerRepository.findCustomerByEmail(email);
-        customerUpdate.setPassword(customer.getPassword());
+        if (customer == null) {
+            throw new NullPointerException();
+        }
         customerUpdate.setEmail(customer.getEmail());
+        customerUpdate.setPassword(customer.getPassword());
         customerRepository.save(customerUpdate);
     }
 
     @Override
-    public void deleteCustomer(long id){
+    public void deleteCustomer(long id) throws AuthenticationNotFoundException {
         Customer customer = customerRepository.getCustomerById(id);
+        if (customer == null){
+            throw new AuthenticationNotFoundException();
+        }
         customerRepository.delete(customer);
     }
 }
