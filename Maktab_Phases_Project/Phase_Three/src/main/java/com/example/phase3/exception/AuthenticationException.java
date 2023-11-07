@@ -1,7 +1,14 @@
 package com.example.phase3.exception;
 
-public class AuthenticationException extends Exception {
+import org.springframework.http.HttpStatus;
+
+public class AuthenticationException extends BaseHttpException {
+
     public AuthenticationException(String message) {
         super(message);
+    }
+
+    public HttpStatus getStatus() {
+        return HttpStatus.UNAUTHORIZED;
     }
 }
