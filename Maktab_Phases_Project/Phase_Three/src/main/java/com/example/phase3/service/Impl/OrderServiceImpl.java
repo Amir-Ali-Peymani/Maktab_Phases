@@ -18,7 +18,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void saveOrder(Order order) throws NullPointerException {
-        if (order == null) {
+        if (order == null || order.getCustomer() == null) {
             throw new NullPointerException();
         }
         orderRepository.save(order);
