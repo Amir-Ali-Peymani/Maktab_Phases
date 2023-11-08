@@ -42,16 +42,16 @@ public class Order {
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
 
-//    @ManyToOne(optional = false
-//    )
-//    @JoinColumn(name = "subService_id")
-//    private SubService subService;
-//
-//    @OneToMany(mappedBy = "order")
-//    private List<Proposal> proposals;
-//
-//    @OneToMany(mappedBy = "order")
-//    private List<Review> reviews;
+    @ManyToOne(optional = false
+    )
+    @JoinColumn(name = "subService_id")
+    private SubService subService;
+
+    @OneToMany(mappedBy = "order")
+    private List<Proposal> proposals;
+
+    @OneToMany(mappedBy = "order")
+    private List<Review> reviews;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
