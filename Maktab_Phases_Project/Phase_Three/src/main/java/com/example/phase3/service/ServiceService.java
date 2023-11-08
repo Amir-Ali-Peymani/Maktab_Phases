@@ -6,6 +6,7 @@ import com.example.phase3.exception.NullPointerException;
 
 import java.util.List;
 
+@org.springframework.stereotype.Service
 public interface ServiceService {
 
     void saveService(Service service) throws NullPointerException;
