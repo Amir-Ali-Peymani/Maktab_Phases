@@ -5,22 +5,18 @@ import com.example.phase3.entity.Admin;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.AdminService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
 
     private final AdminService adminService;
-
-    @Autowired
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
-    }
 
     @GetMapping("/login/{email}/{password}")
     public ResponseEntity<?> getAdmin(@PathVariable("email") String email,
