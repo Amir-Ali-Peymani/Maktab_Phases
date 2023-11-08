@@ -35,10 +35,10 @@ public class CustomerController {
         try {
             Customer customer = customerService.getCustomerByEmailAndPassword(email, password);
             return ResponseEntity.ok(customer);
-        }catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (InvalidUserNameAndPasswordException e) {
+        }catch (InvalidUserNameAndPasswordException e) {
             throw new RuntimeException(e);
+        } catch (BaseHttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
