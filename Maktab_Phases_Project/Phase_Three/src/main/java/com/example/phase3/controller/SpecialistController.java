@@ -37,8 +37,8 @@ public class SpecialistController {
             return ResponseEntity.ok(specialist);
         } catch (InvalidUserNameAndPasswordException e) {
             throw new RuntimeException(e);
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (BaseHttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ public class SpecialistController {
             List<Specialist> specialists = specialistService.getAllSpecialists();
             return ResponseEntity.ok(specialists);
         }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
