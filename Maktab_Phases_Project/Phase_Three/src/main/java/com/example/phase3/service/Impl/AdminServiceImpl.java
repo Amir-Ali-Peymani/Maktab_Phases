@@ -1,7 +1,6 @@
 package com.example.phase3.service.Impl;
 
 import com.example.phase3.entity.Admin;
-import com.example.phase3.exception.AuthenticationException;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.InvalidEmailException;
 import com.example.phase3.exception.InvalidUserNameAndPasswordException;
@@ -9,9 +8,7 @@ import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.repository.AdminRepository;
 import com.example.phase3.service.AdminService;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
-import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
