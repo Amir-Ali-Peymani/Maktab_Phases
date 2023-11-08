@@ -55,7 +55,7 @@ public class SpecialistServiceImpl implements SpecialistService {
         }
         specialistUpdate.setEmail(specialist.getEmail());
         specialistUpdate.setPassword(specialist.getPassword());
-        specialistRepository.save(specialist);
+        specialistRepository.save(specialistUpdate);
     }
 
     @Override
