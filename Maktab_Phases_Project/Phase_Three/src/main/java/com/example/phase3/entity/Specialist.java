@@ -38,17 +38,17 @@ public class Specialist {
 
     @Enumerated(EnumType.STRING)
     private SpecialistStatus specialistStatus;
-//
-//    @OneToOne(mappedBy = "specialist")
-//    private Credit credit;
-//
-//    @OneToMany(mappedBy = "specialist", cascade = CascadeType.ALL)
-//    private List<Proposal> proposals;
-//
-//    @OneToMany(mappedBy = "specialist")
-//    private List<Order> orders;
-//
-//    @ManyToMany
-//    @JoinColumn(name = "specialist_id")
-//    private List<SubService> subServices;
+
+    @OneToOne(mappedBy = "specialist")
+    private Credit credit;
+
+    @OneToMany(mappedBy = "specialist", cascade = CascadeType.ALL)
+    private List<Proposal> proposals;
+
+    @OneToMany(mappedBy = "specialist")
+    private List<Order> orders;
+
+    @ManyToMany
+    @JoinColumn(name = "specialist_id")
+    private List<SubService> subServices;
 }
