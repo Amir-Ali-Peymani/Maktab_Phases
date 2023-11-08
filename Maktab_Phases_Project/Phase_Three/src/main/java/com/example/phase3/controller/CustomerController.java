@@ -5,23 +5,20 @@ import com.example.phase3.entity.Customer;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.CustomerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
 
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
 
     @PostMapping("/saveCustomer")
     public void saveCustomer(@RequestBody Customer customer) throws NullPointerException {
