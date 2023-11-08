@@ -49,7 +49,7 @@ public class CustomerController {
             List<Customer> customers = customerService.getAllCustomer();
             return ResponseEntity.ok(customers);
         }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
