@@ -6,23 +6,19 @@ import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.ServiceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/service")
 public class ServiceController {
 
     private final ServiceService serviceService;
-
-    @Autowired
-    public ServiceController(ServiceService serviceService) {
-        this.serviceService = serviceService;
-    }
 
     @PostMapping("/saveService")
     public void saveService(@RequestBody Service service) throws NullPointerException {
