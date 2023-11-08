@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/service")
 public class ServiceController {
 
-
     private final ServiceService serviceService;
 
     @Autowired
@@ -34,6 +33,16 @@ public class ServiceController {
     public ResponseEntity<?> getService(@PathVariable("name") String name){
         try{
             Service service = serviceService.getServiceByName(name);
+            return ResponseEntity.ok(service);
+        }catch (BaseHttpException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/getService/{id}")
+    public ResponseEntity<?> getService(@PathVariable("id") long id){
+        try{
+            Service service = serviceService.getServiceById(id);
             return ResponseEntity.ok(service);
         }catch (BaseHttpException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
