@@ -26,10 +26,10 @@ public class Order {
 
     private Date date;
 
-    @Column(nullable = true)
+    @Column
     private double finalPrice;
 
-    @Column(nullable = true)
+    @Column
     private Date compeletionDate;
 
     @ManyToOne(optional = false
