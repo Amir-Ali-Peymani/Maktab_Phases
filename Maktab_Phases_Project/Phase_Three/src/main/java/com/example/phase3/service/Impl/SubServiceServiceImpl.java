@@ -1,5 +1,6 @@
 package com.example.phase3.service.Impl;
 
+import com.example.phase3.dto.SubServiceDTO;
 import com.example.phase3.entity.SubService;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.NullPointerException;
@@ -25,26 +26,29 @@ public class SubServiceServiceImpl implements SubServiceService {
     }
 
     @Override
-    public SubService getSubServiceById(Long id) throws AuthenticationNotFoundException {
+    public SubServiceDTO getSubServiceById(Long id) throws AuthenticationNotFoundException {
         SubService subService = subServiceRepository.getSubServiceById(id);
         if (subService == null){
             throw new AuthenticationNotFoundException();
         }
-        return subService;
+        return SubServiceDTO.fromSubService(subService);
     }
 
     @Override
-    public SubService getSubServiceByName(String name) throws AuthenticationNotFoundException {
+    public SubServiceDTO getSubServiceByName(String name) throws AuthenticationNotFoundException {
         SubService subService = subServiceRepository.getSubServiceByName(name);
         if (subService == null){
             throw new AuthenticationNotFoundException();
         }
-        return subService;
+        return SubServiceDTO.fromSubService(subService);
     }
 
     @Override
-    public List<SubService> getAllSubServices() {
-        return subServiceRepository.findAll();
+    public List<SubServiceDTO> getAllSubServices() {
+        List<SubService> subServices = subServiceRepository.findAll();
+        return subServices.stream()
+                .map(SubServiceDTO::fromSubService)
+                .toList();
     }
 
     @Override
