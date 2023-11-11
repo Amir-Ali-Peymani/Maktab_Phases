@@ -1,6 +1,7 @@
 package com.example.phase3.controller;
 
 
+import com.example.phase3.dto.ServiceDTO;
 import com.example.phase3.entity.Service;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
@@ -25,21 +26,21 @@ public class ServiceController {
         serviceService.saveService(service);
     }
 
-    @GetMapping("/getService/{name}")
+    @GetMapping("/getServiceByName/{name}")
     public ResponseEntity<?> getService(@PathVariable("name") String name){
         try{
-            Service service = serviceService.getServiceByName(name);
-            return ResponseEntity.ok(service);
+            ServiceDTO serviceDTO = serviceService.getServiceByName(name);
+            return ResponseEntity.ok(serviceDTO);
         }catch (BaseHttpException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
-    @GetMapping("/getService/{id}")
+    @GetMapping("/getServiceById/{id}")
     public ResponseEntity<?> getService(@PathVariable("id") long id){
         try{
-            Service service = serviceService.getServiceById(id);
-            return ResponseEntity.ok(service);
+            ServiceDTO serviceDTO = serviceService.getServiceById(id);
+            return ResponseEntity.ok(serviceDTO);
         }catch (BaseHttpException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
@@ -48,8 +49,8 @@ public class ServiceController {
     @GetMapping("/getAllService")
     public ResponseEntity<?> getAllService(){
         try{
-            List<Service> services = serviceService.getAllServices();
-            return ResponseEntity.ok(services);
+            List<ServiceDTO> servicesDTO = serviceService.getAllServices();
+            return ResponseEntity.ok(servicesDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
