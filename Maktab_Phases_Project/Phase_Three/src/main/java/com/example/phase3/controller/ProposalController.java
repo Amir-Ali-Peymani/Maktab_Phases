@@ -1,5 +1,6 @@
 package com.example.phase3.controller;
 
+import com.example.phase3.dto.ProposalDTO;
 import com.example.phase3.entity.Proposal;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
@@ -27,8 +28,8 @@ public class ProposalController {
     @GetMapping("/getProposal/{id}")
     public ResponseEntity<?> getProposal(@PathVariable("id")long id){
         try {
-            Proposal proposal = proposalService.getProposalById(id);
-            return ResponseEntity.ok(proposal);
+            ProposalDTO proposalDTO = proposalService.getProposalById(id);
+            return ResponseEntity.ok(proposalDTO);
         }catch (BaseHttpException e){
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
@@ -37,8 +38,8 @@ public class ProposalController {
     @GetMapping("/getAllProposal")
     public ResponseEntity<?> getAllProposals(){
         try {
-            List<Proposal> proposals = proposalService.getAllProposals();
-            return ResponseEntity.ok(proposals);
+            List<ProposalDTO> proposalsDTO = proposalService.getAllProposals();
+            return ResponseEntity.ok(proposalsDTO);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
