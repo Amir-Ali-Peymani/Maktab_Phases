@@ -1,5 +1,6 @@
 package com.example.phase3.controller;
 
+import com.example.phase3.dto.OrderDTO;
 import com.example.phase3.entity.Order;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/controller")
+@RequestMapping("/order")
 public class OrderController {
 
     private final OrderService orderService;
@@ -27,8 +28,8 @@ public class OrderController {
     @GetMapping("/getOrder/{id}")
     public ResponseEntity<?> getOrder(@PathVariable("id") long id){
         try{
-            Order order = orderService.getOrderById(id);
-            return ResponseEntity.ok(order);
+            OrderDTO orderDTO = orderService.getOrderById(id);
+            return ResponseEntity.ok(orderDTO);
         } catch (BaseHttpException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
@@ -37,7 +38,7 @@ public class OrderController {
     @GetMapping("/getAllOrder")
     public ResponseEntity<?> getAllOrder(){
         try{
-            List<Order> orders = orderService.getAllOrder();
+            List<OrderDTO> orders = orderService.getAllOrder();
             return ResponseEntity.ok(orders);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
