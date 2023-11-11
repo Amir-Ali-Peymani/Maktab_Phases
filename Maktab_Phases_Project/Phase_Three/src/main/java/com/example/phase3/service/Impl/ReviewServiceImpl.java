@@ -1,6 +1,8 @@
 package com.example.phase3.service.Impl;
 
+import com.example.phase3.dto.ReviewDTO;
 import com.example.phase3.entity.Review;
+import com.example.phase3.enumeration.OrderStatus;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.repository.ReviewRepository;
@@ -21,21 +23,29 @@ public class ReviewServiceImpl implements ReviewService {
         if (review == null || review.getCustomer() == null || review.getOrder() == null){
             throw new NullPointerException();
         }
-        reviewRepository.save(review);
+        if (review.getOrder().getOrderStatus().equals(OrderStatus.COMPLETED)){
+            reviewRepository.save(review);
+        }else {
+
+        }
+
     }
 
     @Override
-    public Review getReviewById(Long id) throws AuthenticationNotFoundException {
+    public ReviewDTO getReviewById(Long id) throws AuthenticationNotFoundException {
         Review review = reviewRepository.getReviewById(id);
         if (review == null){
             throw new AuthenticationNotFoundException();
         }
-        return review;
+        return ReviewDTO.fromReview(review);
     }
 
     @Override
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public List<ReviewDTO> getAllReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        return reviews.stream()
+                .map(ReviewDTO::fromReview)
+                .toList();
     }
 
     @Override
