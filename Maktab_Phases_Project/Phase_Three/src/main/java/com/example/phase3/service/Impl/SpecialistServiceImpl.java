@@ -1,9 +1,15 @@
 package com.example.phase3.service.Impl;
 
+import com.example.phase3.dto.SpecialistDTO;
+import com.example.phase3.entity.Order;
+import com.example.phase3.entity.Proposal;
 import com.example.phase3.entity.Specialist;
+import com.example.phase3.enumeration.OrderStatus;
 import com.example.phase3.enumeration.SpecialistStatus;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
+import com.example.phase3.repository.OrderRepository;
+import com.example.phase3.repository.ProposalRepository;
 import com.example.phase3.repository.SpecialistRepository;
 import com.example.phase3.service.SpecialistService;
 import lombok.AllArgsConstructor;
@@ -17,6 +23,10 @@ public class SpecialistServiceImpl implements SpecialistService {
 
     private final SpecialistRepository specialistRepository;
 
+    private final OrderRepository orderRepository;
+
+    private final ProposalRepository proposalRepository;
+
     @Override
     public void saveSpecialist(Specialist specialist) throws NullPointerException {
         if (specialist == null) {
@@ -27,7 +37,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     }
 
     @Override
-    public Specialist getCustomerByEmailAndPassword(String email, String password) throws InvalidUserNameAndPasswordException, AuthenticationNotFoundException {
+    public SpecialistDTO getCustomerByEmailAndPassword(String email, String password) throws InvalidUserNameAndPasswordException, AuthenticationNotFoundException {
         if (email == null || email.equals("") || password == null || password.equals("")){
             throw new InvalidUserNameAndPasswordException();
         }
@@ -35,13 +45,16 @@ public class SpecialistServiceImpl implements SpecialistService {
         if (specialist == null){
             throw new AuthenticationNotFoundException();
         }
-        return specialist;
+        return SpecialistDTO.fromSpecialistDTO(specialist);
     }
 
 
     @Override
-    public List<Specialist> getAllSpecialists() {
-        return specialistRepository.findAll();
+    public List<SpecialistDTO> getAllSpecialists() {
+        List<Specialist> specialists = specialistRepository.findAll();
+        return specialists.stream()
+                .map(SpecialistDTO::fromSpecialistDTO)
+                .toList();
     }
 
     @Override
@@ -65,5 +78,15 @@ public class SpecialistServiceImpl implements SpecialistService {
             throw new AuthenticationNotFoundException();
         }
         specialistRepository.delete(specialist);
+    }
+
+    @Override
+    public void specialistsGiveProposal(long id, long orderId, Proposal proposal) {
+        Specialist specialist = specialistRepository.getSpecialistById(id);
+        Order order = orderRepository.getOrderById(orderId);
+        order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_SELECTION);
+        proposal.setSpecialist(specialist);
+        proposal.setOrder(order);
+        proposalRepository.save(proposal);
     }
 }
