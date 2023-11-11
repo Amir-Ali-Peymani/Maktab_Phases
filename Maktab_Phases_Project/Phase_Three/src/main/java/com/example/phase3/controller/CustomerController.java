@@ -1,7 +1,9 @@
 package com.example.phase3.controller;
 
 
+import com.example.phase3.dto.CustomerDTO;
 import com.example.phase3.entity.Customer;
+import com.example.phase3.entity.Order;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.CustomerService;
@@ -19,10 +21,20 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-
     @PostMapping("/saveCustomer")
     public void saveCustomer(@RequestBody Customer customer) throws NullPointerException {
         customerService.saveCustomer(customer);
+    }
+
+    @PostMapping("/customerGiveOrder/{id}/{subServiceId}")
+    public void customerGiveOrder(@PathVariable("id") long id, @PathVariable("subServiceId")
+                                  long subServiceId, @RequestBody Order order){
+        customerService.giveOrder(id, subServiceId, order);
+    }
+
+    @PostMapping("/customerChooseProposal/{id}")
+    public void customerChooseProposal(@PathVariable("id")long id){
+        customerService.selectProposal(id);
     }
 
 
@@ -30,8 +42,8 @@ public class CustomerController {
     public ResponseEntity<?> customerLoginIn(@PathVariable("email") String email,
                                              @PathVariable("password") String password){
         try {
-            Customer customer = customerService.getCustomerByEmailAndPassword(email, password);
-            return ResponseEntity.ok(customer);
+            CustomerDTO customerDTO = customerService.getCustomerByEmailAndPassword(email, password);
+            return ResponseEntity.ok(customerDTO);
         }catch (InvalidUserNameAndPasswordException e) {
             throw new RuntimeException(e);
         } catch (BaseHttpException e) {
@@ -39,12 +51,11 @@ public class CustomerController {
         }
     }
 
-
     @GetMapping("/getAllCustomer")
     public ResponseEntity<?> getAllCustomer(){
         try {
-            List<Customer> customers = customerService.getAllCustomer();
-            return ResponseEntity.ok(customers);
+            List<CustomerDTO> customersDTO = customerService.getAllCustomer();
+            return ResponseEntity.ok(customersDTO);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
