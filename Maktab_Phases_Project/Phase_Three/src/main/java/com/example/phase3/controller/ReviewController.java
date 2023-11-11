@@ -1,5 +1,6 @@
 package com.example.phase3.controller;
 
+import com.example.phase3.dto.ReviewDTO;
 import com.example.phase3.entity.Review;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
@@ -27,8 +28,8 @@ public class ReviewController {
     @GetMapping("/getReview/{id}")
     public ResponseEntity<?> getReview(@PathVariable("id")long id){
         try {
-            Review review = reviewService.getReviewById(id);
-            return ResponseEntity.ok(review);
+            ReviewDTO reviewDTO = reviewService.getReviewById(id);
+            return ResponseEntity.ok(reviewDTO);
         }catch (BaseHttpException e){
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
@@ -37,8 +38,8 @@ public class ReviewController {
     @GetMapping("/getAllReview")
     public ResponseEntity<?> getAllReview(){
         try{
-            List<Review> reviews = reviewService.getAllReviews();
-            return ResponseEntity.ok(reviews);
+            List<ReviewDTO> reviewsDTO = reviewService.getAllReviews();
+            return ResponseEntity.ok(reviewsDTO);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
