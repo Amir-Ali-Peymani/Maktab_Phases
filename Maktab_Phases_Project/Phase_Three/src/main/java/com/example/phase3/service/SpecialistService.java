@@ -1,6 +1,8 @@
 package com.example.phase3.service;
 
 
+import com.example.phase3.dto.SpecialistDTO;
+import com.example.phase3.entity.Proposal;
 import com.example.phase3.entity.Specialist;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
@@ -13,11 +15,13 @@ public interface SpecialistService {
 
     void saveSpecialist(Specialist specialist) throws NullPointerException;
 
-    Specialist getCustomerByEmailAndPassword(String email, String password) throws AuthenticationException, InvalidUserNameAndPasswordException;
+    SpecialistDTO getCustomerByEmailAndPassword(String email, String password) throws AuthenticationException, InvalidUserNameAndPasswordException;
 
-    List<Specialist> getAllSpecialists();
+    List<SpecialistDTO> getAllSpecialists();
 
     void updateSpecialist(String email, Specialist specialist) throws InvalidEmailException, NullPointerException;
 
     void deleteSpecialist(long id) throws AuthenticationNotFoundException;
+
+    void specialistsGiveProposal(long id, long orderId, Proposal proposal);
 }
