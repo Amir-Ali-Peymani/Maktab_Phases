@@ -1,5 +1,6 @@
 package com.example.phase3.controller;
 
+import com.example.phase3.dto.CreditDTO;
 import com.example.phase3.entity.Credit;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
@@ -27,8 +28,8 @@ public class CreditController {
     @GetMapping("/getCredit/{id}")
     public ResponseEntity<?> getCredit(@PathVariable("id") long id){
         try{
-            Credit credit = creditService.getCreditById(id);
-            return ResponseEntity.ok(credit);
+            CreditDTO creditDTO = creditService.getCreditById(id);
+            return ResponseEntity.ok(creditDTO);
         }catch (BaseHttpException e) {
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
@@ -37,7 +38,7 @@ public class CreditController {
     @GetMapping("/getAllCredit")
     public ResponseEntity<?> getAllCredit(){
         try{
-            List<Credit> credits = creditService.getAllCredit();
+            List<CreditDTO> credits = creditService.getAllCredit();
             return ResponseEntity.ok(credits);
         } catch(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
