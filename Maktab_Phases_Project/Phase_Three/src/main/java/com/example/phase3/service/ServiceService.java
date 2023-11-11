@@ -1,5 +1,6 @@
 package com.example.phase3.service;
 
+import com.example.phase3.dto.ServiceDTO;
 import com.example.phase3.entity.Service;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.NullPointerException;
@@ -11,11 +12,11 @@ public interface ServiceService {
 
     void saveService(Service service) throws NullPointerException;
 
-    Service getServiceById(Long id) throws AuthenticationNotFoundException;
+    ServiceDTO getServiceById(Long id) throws AuthenticationNotFoundException;
 
-    Service getServiceByName(String name) throws AuthenticationNotFoundException;
+    ServiceDTO getServiceByName(String name) throws AuthenticationNotFoundException;
 
-    List<Service> getAllServices();
+    List<ServiceDTO> getAllServices();
 
     void updateService(long id, Service service) throws NullPointerException;
 
