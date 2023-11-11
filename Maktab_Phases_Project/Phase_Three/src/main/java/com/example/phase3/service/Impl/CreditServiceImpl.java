@@ -1,5 +1,6 @@
 package com.example.phase3.service.Impl;
 
+import com.example.phase3.dto.CreditDTO;
 import com.example.phase3.entity.Credit;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.NullPointerException;
@@ -25,17 +26,20 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public Credit getCreditById(Long id) throws AuthenticationNotFoundException {
+    public CreditDTO getCreditById(Long id) throws AuthenticationNotFoundException {
         Credit credit = creditRepository.getCreditById(id);
         if (credit == null) {
             throw new AuthenticationNotFoundException();
         }
-        return credit;
+        return CreditDTO.fromCredit(credit);
     }
 
     @Override
-    public List<Credit> getAllCredit() {
-        return creditRepository.findAll();
+    public List<CreditDTO> getAllCredit() {
+        List<Credit> credits = creditRepository.findAll();
+        return credits.stream()
+                .map(CreditDTO::fromCredit)
+                .toList();
     }
 
     @Override
