@@ -1,6 +1,7 @@
 package com.example.phase3.controller;
 
 
+import com.example.phase3.dto.SubServiceDTO;
 import com.example.phase3.entity.SubService;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.BaseHttpException;
@@ -25,21 +26,21 @@ public class SubServiceController {
         subServiceService.saveSubService(subService);
     }
 
-    @GetMapping("/getSubService/{name}")
+    @GetMapping("/getSubServiceByName/{name}")
     public ResponseEntity<?> getSubService(@PathVariable("name")String name){
         try{
-            SubService subService = subServiceService.getSubServiceByName(name);
-            return ResponseEntity.ok(subService);
+            SubServiceDTO subServiceDTO = subServiceService.getSubServiceByName(name);
+            return ResponseEntity.ok(subServiceDTO);
         }catch (BaseHttpException e){
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
     }
 
-    @GetMapping("/getSubService/{id}")
+    @GetMapping("/getSubServiceById/{id}")
     public ResponseEntity<?> getSubService(@PathVariable("id")long id){
         try{
-            SubService subService = subServiceService.getSubServiceById(id);
-            return ResponseEntity.ok(subService);
+            SubServiceDTO subServiceDTO = subServiceService.getSubServiceById(id);
+            return ResponseEntity.ok(subServiceDTO);
         }catch (BaseHttpException e){
             return ResponseEntity.status(e.getStatus()).body(e.getMessage());
         }
@@ -48,8 +49,8 @@ public class SubServiceController {
     @GetMapping("/getAllSubService")
     public ResponseEntity<?> getAllSubService(){
         try{
-            List<SubService> subServices = subServiceService.getAllSubServices();
-            return ResponseEntity.ok(subServices);
+            List<SubServiceDTO> subServicesDTO = subServiceService.getAllSubServices();
+            return ResponseEntity.ok(subServicesDTO);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
