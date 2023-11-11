@@ -1,6 +1,8 @@
 package com.example.phase3.controller;
 
 
+import com.example.phase3.dto.SpecialistDTO;
+import com.example.phase3.entity.Proposal;
 import com.example.phase3.entity.Specialist;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
@@ -24,12 +26,18 @@ public class SpecialistController {
         specialistService.saveSpecialist(specialist);
     }
 
+    @PostMapping("/saveProposal/{id}/{orderId}")
+    public void saveProposal(@PathVariable("id") long id, @PathVariable("orderId") long orderId, @RequestBody
+                             Proposal proposal){
+        specialistService.specialistsGiveProposal(id, orderId, proposal);
+    }
+
     @GetMapping("/login/{email}/{password}")
     public ResponseEntity<?> specialistLogin(@PathVariable("email") String email,
                                              @PathVariable("password") String password){
         try{
-            Specialist specialist = specialistService.getCustomerByEmailAndPassword(email, password);
-            return ResponseEntity.ok(specialist);
+            SpecialistDTO specialistDTO = specialistService.getCustomerByEmailAndPassword(email, password);
+            return ResponseEntity.ok(specialistDTO);
         } catch (InvalidUserNameAndPasswordException e) {
             throw new RuntimeException(e);
         } catch (BaseHttpException e) {
@@ -40,8 +48,8 @@ public class SpecialistController {
     @GetMapping("/getAllSpecialist")
     public ResponseEntity<?> getAllSpecialist(){
         try {
-            List<Specialist> specialists = specialistService.getAllSpecialists();
-            return ResponseEntity.ok(specialists);
+            List<SpecialistDTO> specialistsDTO = specialistService.getAllSpecialists();
+            return ResponseEntity.ok(specialistsDTO);
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
