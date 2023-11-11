@@ -1,5 +1,6 @@
 package com.example.phase3.service.Impl;
 
+import com.example.phase3.dto.ProposalDTO;
 import com.example.phase3.entity.Proposal;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.NullPointerException;
@@ -25,17 +26,20 @@ public class ProposalServiceImpl implements ProposalService {
     }
 
     @Override
-    public Proposal getProposalById(Long id) throws AuthenticationNotFoundException {
+    public ProposalDTO getProposalById(Long id) throws AuthenticationNotFoundException {
         Proposal proposal = proposalRepository.getProposalById(id);
         if (proposal == null) {
             throw new AuthenticationNotFoundException();
         }
-        return proposal;
+        return ProposalDTO.fromProposal(proposal);
     }
 
     @Override
-    public List<Proposal> getAllProposals() {
-        return proposalRepository.findAll();
+    public List<ProposalDTO> getAllProposals() {
+        List<Proposal> proposals = proposalRepository.findAll();
+        return proposals.stream()
+                .map(ProposalDTO::fromProposal)
+                .toList();
     }
 
     @Override
