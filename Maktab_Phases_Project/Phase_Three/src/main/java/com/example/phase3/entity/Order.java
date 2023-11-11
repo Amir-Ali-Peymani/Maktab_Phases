@@ -32,9 +32,7 @@ public class Order {
     @Column
     private Date compeletionDate;
 
-    @ManyToOne(optional = false
-
-    )
+    @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
@@ -42,8 +40,7 @@ public class Order {
     @JoinColumn(name = "specialist_id")
     private Specialist specialist;
 
-    @ManyToOne(optional = false
-    )
+    @ManyToOne(optional = false)
     @JoinColumn(name = "subService_id")
     private SubService subService;
 
