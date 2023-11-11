@@ -1,5 +1,6 @@
 package com.example.phase3.service.Impl;
 
+import com.example.phase3.dto.ServiceDTO;
 import com.example.phase3.entity.Service;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.NullPointerException;
@@ -24,26 +25,29 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service getServiceById(Long id) throws AuthenticationNotFoundException {
+    public ServiceDTO getServiceById(Long id) throws AuthenticationNotFoundException {
         Service service = serviceRepository.getServicesById(id);
         if (service == null) {
             throw new AuthenticationNotFoundException();
         }
-        return service;
+        return ServiceDTO.fromService(service);
     }
 
     @Override
-    public Service getServiceByName(String name) throws AuthenticationNotFoundException {
+    public ServiceDTO getServiceByName(String name) throws AuthenticationNotFoundException {
         Service service = serviceRepository.getServicesByName(name);
         if (service == null) {
             throw new AuthenticationNotFoundException();
         }
-        return service;
+        return ServiceDTO.fromService(service);
     }
 
     @Override
-    public List<Service> getAllServices() {
-        return serviceRepository.findAll();
+    public List<ServiceDTO> getAllServices() {
+        List<Service> services = serviceRepository.findAll();
+        return services.stream()
+                .map(ServiceDTO::fromService)
+                .toList();
     }
 
     @Override
