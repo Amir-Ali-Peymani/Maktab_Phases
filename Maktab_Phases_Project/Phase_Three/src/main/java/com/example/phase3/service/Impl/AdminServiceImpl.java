@@ -1,11 +1,14 @@
 package com.example.phase3.service.Impl;
 
 import com.example.phase3.entity.Admin;
+import com.example.phase3.entity.Specialist;
+import com.example.phase3.enumeration.SpecialistStatus;
 import com.example.phase3.exception.AuthenticationNotFoundException;
 import com.example.phase3.exception.InvalidEmailException;
 import com.example.phase3.exception.InvalidUserNameAndPasswordException;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.repository.AdminRepository;
+import com.example.phase3.repository.SpecialistRepository;
 import com.example.phase3.service.AdminService;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -19,6 +22,7 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
 
+    private final SpecialistRepository specialistRepository;
 
     @Override
     public Admin findAdminByEmailAndPassword(@Email String email, String password) throws AuthenticationNotFoundException,
@@ -50,5 +54,11 @@ public class AdminServiceImpl implements AdminService {
         adminUpdate.setPassword(admin.getPassword());
         adminUpdate.setEmail(admin.getEmail());
         adminRepository.save(adminUpdate);
+    }
+
+    @Override
+    public void confirmingSpecialist(long id) {
+        Specialist specialist = specialistRepository.getSpecialistById(id);
+        specialist.setSpecialistStatus(SpecialistStatus.CONFIRM);
     }
 }
