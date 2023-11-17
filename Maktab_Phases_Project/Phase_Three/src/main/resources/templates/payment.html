@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" th:href="/css/styles.css">
+</head>
+
+<body>
+<h1>Payment Page</h1>
+<form id="paymentForm" action="/api/payments/process" method="post">
+
+    <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+
+    <section>
+        <label>Card number</label>
+        <label for="cardNumber"></label><input type="text" id="cardNumber" name="cardNumber" required>
+    </section>
+
+    <section>
+        <label>amount</label>
+        <label for="amount"></label><input type="number" id="amount" name="amount" required>
+    </section>
+
+    <section id="cc-exp-csc">
+        <div>
+            <label>Expiry date</label>
+            <label for="expiryDate"></label><input type="text" id="expiryDate" name="expiryDate" required>
+        </div>
+        <div>
+            <label>Security code</label>
+            <label for="securityCode"></label><input type="text" id="securityCode" name="securityCode" required>
+            <div class="explanation">Last 3 digits on back of card</div>
+        </div>
+    </section>
+
+    <button id="complete-payment" type="submit">Complete payment</button>
+</form>
+
+<script th:src="@{/js/payment.js}"></script>
+</body>
+
+</html>
