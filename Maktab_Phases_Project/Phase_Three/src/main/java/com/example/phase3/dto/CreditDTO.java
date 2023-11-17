@@ -21,7 +21,7 @@ public class CreditDTO {
         creditDTO.setId(credit.getId());
         creditDTO.setBalance(credit.getBalance());
         creditDTO.setCustomerId(credit.getCustomer().getId());
-        creditDTO.setSpecialistId(credit.getSpecialist().getId());
+//        creditDTO.setSpecialistId(credit.getSpecialist().getId());
         return creditDTO;
     }
 }
