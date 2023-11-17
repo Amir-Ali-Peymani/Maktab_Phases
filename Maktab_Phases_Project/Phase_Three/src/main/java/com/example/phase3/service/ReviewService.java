@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface ReviewService {
 
-    void saveReview(Review review) throws NullPointerException;
+    void saveReview(Review review) throws Exception;
 
     ReviewDTO getReviewById(Long id) throws AuthenticationNotFoundException;
 
