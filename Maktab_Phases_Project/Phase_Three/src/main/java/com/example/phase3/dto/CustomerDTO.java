@@ -1,11 +1,13 @@
 package com.example.phase3.dto;
 
 import com.example.phase3.entity.Customer;
+import com.example.phase3.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,9 +20,11 @@ public class CustomerDTO {
     private String name;
     private String lastName;
     private String email;
+    private String password;
     private long creditId;
     private Set<OrderDTO> orderDTOS;
     private Set<ReviewDTO> reviewDTOS;
+    private List<PaymentDTO> paymentDTOS;
 
     public static CustomerDTO fromCustomer(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
@@ -36,7 +40,6 @@ public class CustomerDTO {
                             .collect(Collectors.toSet())
             );
         }
-
         if (customer.getReviews() != null) {
             customerDTO.setReviewDTOS(
                     customer.getReviews().stream()
@@ -44,6 +47,22 @@ public class CustomerDTO {
                             .collect(Collectors.toSet())
             );
         }
+        if (customer.getPayments() != null) {
+            customerDTO.setPaymentDTOS(
+                    customer.getPayments().stream()
+                            .map(PaymentDTO::fromPayment)
+                            .collect(Collectors.toList())
+            );
+        }
         return customerDTO;
+    }
+
+    public static void toCustomer(CustomerDTO customerDTO, Customer oldCustomer){
+        oldCustomer.setId(customerDTO.getId());
+        oldCustomer.setFirstName(customerDTO.getName());
+        oldCustomer.setLastName(customerDTO.getLastName());
+        oldCustomer.setPassword(customerDTO.getPassword());
+        oldCustomer.setEmail(customerDTO.getEmail());
+
     }
 }
