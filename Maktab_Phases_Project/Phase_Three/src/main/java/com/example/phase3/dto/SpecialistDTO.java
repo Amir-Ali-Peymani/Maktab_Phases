@@ -33,7 +33,7 @@ public class SpecialistDTO {
         specialistDTO.setLastName(specialist.getLastName());
         specialistDTO.setEmail(specialist.getEmail());
         specialistDTO.setProfilePicture(specialist.getProfilePicture());
-        specialistDTO.setCreditId(specialist.getCredit().getId());
+//        specialistDTO.setCreditId(specialist.getCredit().getId());
         if(specialist.getProposals() != null){
             specialistDTO.setProposalsDTOs(
                     specialist.getProposals().stream()
