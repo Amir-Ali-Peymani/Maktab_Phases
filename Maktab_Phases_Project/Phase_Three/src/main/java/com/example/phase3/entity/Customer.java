@@ -3,6 +3,7 @@ package com.example.phase3.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,5 +37,8 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private Set<Review> reviews;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Payment> payments;
 
 }
