@@ -39,8 +39,7 @@ public class Specialist {
     @Enumerated(EnumType.STRING)
     private SpecialistStatus specialistStatus;
 
-    @OneToOne(mappedBy = "specialist")
-    private Credit credit;
+
 
     @OneToMany(mappedBy = "specialist", cascade = CascadeType.ALL)
     private List<Proposal> proposals;
