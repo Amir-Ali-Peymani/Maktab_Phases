@@ -21,7 +21,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/saveReview")
-    public void saveReview(@RequestBody Review review) throws NullPointerException {
+    public void saveReview(@RequestBody Review review) throws Exception {
         reviewService.saveReview(review);
     }
 
