@@ -20,10 +20,4 @@ public class Credit {
     @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    @OneToOne
-    @JoinColumn(name = "specialist_id")
-    private Specialist specialist;
-
-
 }
