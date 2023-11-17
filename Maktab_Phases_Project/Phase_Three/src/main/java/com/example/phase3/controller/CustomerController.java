@@ -2,39 +2,54 @@ package com.example.phase3.controller;
 
 
 import com.example.phase3.dto.CustomerDTO;
+import com.example.phase3.entity.Credit;
 import com.example.phase3.entity.Customer;
 import com.example.phase3.entity.Order;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.CustomerService;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Email;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@AllArgsConstructor
+//@AllArgsConstructor
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 
     private final CustomerService customerService;
 
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
+
     @PostMapping("/saveCustomer")
     public void saveCustomer(@RequestBody Customer customer) throws NullPointerException {
         customerService.saveCustomer(customer);
     }
 
+    @PostMapping("/saveNew")
+    public void saveNewCustomer(@RequestBody CustomerDTO customerDTO) throws NullPointerException {
+        customerService.saveCustomerDTO(customerDTO);
+    }
+
     @PostMapping("/customerGiveOrder/{id}/{subServiceId}")
     public void customerGiveOrder(@PathVariable("id") long id, @PathVariable("subServiceId")
-                                  long subServiceId, @RequestBody Order order){
+                                  long subServiceId, @RequestBody Order order) throws NullPointerException {
         customerService.giveOrder(id, subServiceId, order);
     }
 
-    @PostMapping("/customerChooseProposal/{id}")
-    public void customerChooseProposal(@PathVariable("id")long id){
+    @PostMapping("/customerChooseProposal/{id}")    
+    public void customerChooseProposal(@PathVariable("id")long id) throws NullPointerException {
         customerService.selectProposal(id);
+    }
+
+    @PostMapping("/customerPaying")
+    public String customerPaying(@ModelAttribute Credit credit){
+        return "Payment";
     }
 
 
@@ -62,8 +77,8 @@ public class CustomerController {
     }
 
     @PutMapping("/updateCustomer/{email}")
-    public void updateCustomer(@PathVariable("email") String email,
-                               @RequestBody Customer customer) throws NullPointerException, InvalidEmailException {
+    public void updateCustomer(@PathVariable("email") @Email String email,
+                               @RequestBody Customer customer) throws InvalidEmailException {
         customerService.updateCustomer(email, customer);
     }
 
