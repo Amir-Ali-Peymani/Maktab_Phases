@@ -36,6 +36,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public void saveCustomerDTO(CustomerDTO customerDTO) throws NullPointerException {
+        if (customerDTO == null){
+            throw new NullPointerException();
+        }
+        Customer customer = new Customer();
+        if (customerDTO.getId()>0){
+            customer = customerRepository.getCustomerById(customerDTO.getId());
+        }
+        CustomerDTO.toCustomer(customerDTO, customer);
+        customerRepository.save(customer);
+    }
+
+    @Override
     public CustomerDTO getCustomerByEmailAndPassword(String email, String password) throws AuthenticationNotFoundException,
             InvalidUserNameAndPasswordException {
         if(email == null || email.equals("")  || password == null || password.equals("")){
@@ -57,10 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(String email, Customer customer) throws InvalidEmailException, NullPointerException {
-        if (email == null || email.equals("")) {
-            throw new InvalidEmailException();
-        }
+    public void updateCustomer(String email, Customer customer){
         Customer customerUpdate = customerRepository.findCustomerByEmail(email);
         if (customer == null) {
             throw new NullPointerException();
@@ -80,9 +90,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void giveOrder(long id, long subServiceId, Order order) {
+    public void giveOrder(long id, long subServiceId, Order order) throws NullPointerException {
         Customer customer = customerRepository.getCustomerById(id);
         SubService subService = subServiceRepository.getSubServiceById(subServiceId);
+        if (customer == null || subService == null || order == null){
+            throw new NullPointerException();
+        }
         order.setCustomer(customer);
         order.setSubService(subService);
         order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_PROPOSAL);
@@ -90,10 +103,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void selectProposal(long proposalId) {
+    public void selectProposal(long proposalId) throws NullPointerException {
         Proposal proposal = proposalRepository.getProposalById(proposalId);
         Order order = orderRepository.getOrderById(proposal.getOrder().getId());
         Specialist specialist = specialistRepository.getSpecialistById(proposal.getSpecialist().getId());
+        if (order == null || specialist == null){
+            throw new NullPointerException();
+        }
         order.setSpecialist(specialist);
         order.setOrderStatus(OrderStatus.STARTED);
         order.setFinalPrice(proposal.getProposedPrice());
@@ -101,5 +117,4 @@ public class CustomerServiceImpl implements CustomerService {
         order.setCompeletionDate(new Date(proposal.getStartTime().getTime() + millisToAdd));
         orderRepository.save(order);
     }
-
 }
