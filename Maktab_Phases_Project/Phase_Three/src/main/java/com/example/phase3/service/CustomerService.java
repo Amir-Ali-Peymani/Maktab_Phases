@@ -5,6 +5,7 @@ import com.example.phase3.entity.Customer;
 import com.example.phase3.entity.Order;
 import com.example.phase3.exception.*;
 import com.example.phase3.exception.NullPointerException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,9 @@ public interface CustomerService {
 
     void deleteCustomer(long id) throws InvalidIdException, AuthenticationNotFoundException;
 
-    void giveOrder(long id, long subServiceId, Order order);
+    void giveOrder(long id, long subServiceId, Order order) throws NullPointerException;
 
-    void selectProposal(long proposalId);
+    void selectProposal(long proposalId) throws NullPointerException;
+
+    void saveCustomerDTO(CustomerDTO customerDTO);
 }
