@@ -19,14 +19,14 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
 
     @Override
-    public void saveReview(Review review) throws NullPointerException {
+    public void saveReview(Review review) throws Exception {
         if (review == null || review.getCustomer() == null || review.getOrder() == null){
             throw new NullPointerException();
         }
         if (review.getOrder().getOrderStatus().equals(OrderStatus.COMPLETED)){
             reviewRepository.save(review);
         }else {
-
+            throw new Exception();
         }
 
     }
