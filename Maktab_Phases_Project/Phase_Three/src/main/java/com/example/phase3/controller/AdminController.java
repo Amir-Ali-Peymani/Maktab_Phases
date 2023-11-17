@@ -30,6 +30,11 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/confirmSpecialist/{id}")
+    public void confirmSpecialist(@PathVariable("id")long id){
+        adminService.confirmingSpecialist(id);
+    }
+
     @GetMapping("/getAllAdmin")
     public List<Admin> getAllAdmin(){
         return adminService.getAllAdmin();
