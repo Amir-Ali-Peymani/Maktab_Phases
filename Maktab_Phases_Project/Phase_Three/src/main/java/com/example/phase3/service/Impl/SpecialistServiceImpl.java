@@ -12,9 +12,12 @@ import com.example.phase3.repository.OrderRepository;
 import com.example.phase3.repository.ProposalRepository;
 import com.example.phase3.repository.SpecialistRepository;
 import com.example.phase3.service.SpecialistService;
+import com.example.phase3.util.ImageUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -32,7 +35,7 @@ public class SpecialistServiceImpl implements SpecialistService {
         if (specialist == null) {
             throw new NullPointerException();
         }
-        specialist.setSpecialistStatus(SpecialistStatus.NEW);
+        specialist.setSpecialistStatus(SpecialistStatus.AWAITING_TO_CONFIRM);
         specialistRepository.save(specialist);
     }
 
@@ -81,12 +84,43 @@ public class SpecialistServiceImpl implements SpecialistService {
     }
 
     @Override
-    public void specialistsGiveProposal(long id, long orderId, Proposal proposal) {
+    public void specialistsGiveProposal(long id, long orderId, Proposal proposal) throws UnAuthorizedSpecialistException {
         Specialist specialist = specialistRepository.getSpecialistById(id);
-        Order order = orderRepository.getOrderById(orderId);
-        order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_SELECTION);
-        proposal.setSpecialist(specialist);
-        proposal.setOrder(order);
-        proposalRepository.save(proposal);
+        if (specialist.getSpecialistStatus().equals(SpecialistStatus.CONFIRM)){
+            Order order = orderRepository.getOrderById(orderId);
+            order.setOrderStatus(OrderStatus.AWAITING_SPECIALIST_SELECTION);
+            proposal.setSpecialist(specialist);
+            proposal.setOrder(order);
+            proposalRepository.save(proposal);
+        }else {
+            throw new UnAuthorizedSpecialistException();
+        }
+
+    }
+
+    @Override
+    public String uploadImage(long id, MultipartFile file) throws IOException {
+//        Specialist specialist = specialistRepository.getSpecialistById(id);
+//        specialist.setProfilePicture(ImageUtils.compressImage(file.getBytes()));
+//        specialistRepository.save(specialist);
+//        if (specialist.getProfilePicture() == null) {
+//            return "file uploaded successfully";
+//        }
+//        return null;
+        Specialist specialist = specialistRepository.getSpecialistById(id);
+        if (file.getSize() <= 300 * 1024) {
+            specialist.setProfilePicture(ImageUtils.compressImage(file.getBytes()));
+            specialistRepository.save(specialist);
+            return "File uploaded successfully";
+        } else {
+            return "File size exceeds the allowed limit of 300 kilobytes";
+        }
+    }
+
+    @Override
+    public byte[] downloadImage(long id) {
+        Specialist specialist = specialistRepository.getSpecialistById(id);
+        byte[] images = ImageUtils.decompressImage(specialist.getProfilePicture());
+        return images;
     }
 }
