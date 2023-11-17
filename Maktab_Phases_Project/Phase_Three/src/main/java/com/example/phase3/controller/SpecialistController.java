@@ -9,9 +9,13 @@ import com.example.phase3.exception.NullPointerException;
 import com.example.phase3.service.SpecialistService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @AllArgsConstructor
@@ -26,9 +30,26 @@ public class SpecialistController {
         specialistService.saveSpecialist(specialist);
     }
 
+    @PostMapping("/savePicture/{id}")
+    public ResponseEntity<?> uploadPicture(@PathVariable("id")long id,
+                                           @RequestParam("image") MultipartFile file) throws IOException {
+        String uploadImage = specialistService.uploadImage(id, file);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(uploadImage);
+    }
+
+    @Transactional
+    @GetMapping("/downloadImage/{id}")
+    public ResponseEntity<?> downloadImage(@PathVariable("id")long id){
+        byte[] imageData = specialistService.downloadImage(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
+    }
+
     @PostMapping("/saveProposal/{id}/{orderId}")
     public void saveProposal(@PathVariable("id") long id, @PathVariable("orderId") long orderId, @RequestBody
-                             Proposal proposal){
+                             Proposal proposal) throws UnAuthorizedSpecialistException {
         specialistService.specialistsGiveProposal(id, orderId, proposal);
     }
 
