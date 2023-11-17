@@ -19,4 +19,6 @@ public interface AdminService {
     List<Admin> getAllAdmin();
 
     void updateAdmin(String email, Admin admin) throws InvalidEmailException, NullPointerException;
+
+    void confirmingSpecialist(long id);
 }
